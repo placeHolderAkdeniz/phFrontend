@@ -1,0 +1,25 @@
+$gap: 30px;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+  height: 100vh;
+
+  .content {
+    display: flex;
+    flex-direction: column;
+    gap: $gap;
+    margin-left: 20px;
+    margin-right: 20px;
+
+    
+
+    .footer {
+      position: relative; 
+      bottom: 0; 
+      display: flex;
+      width: 100vh; 
+    }
+  }
+}

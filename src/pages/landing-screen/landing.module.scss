@@ -1,0 +1,21 @@
+$gap:30px;
+.container{
+    display: flex;
+    flex-direction: column;
+    gap: $gap;
+    .content{
+    display: flex;
+    flex-direction: column;
+    gap: $gap;
+    margin-left: 20px;
+    margin-right: 20px;
+    .middle{
+
+    }
+    .footer{
+        display: flex;
+        position: relative;
+    }
+    }
+    
+}
