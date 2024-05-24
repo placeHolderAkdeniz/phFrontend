@@ -29,7 +29,7 @@ export function SearchBar() {
       </div>
       <div className={styles.right}>
         <TextField id="room-number" label="Room #" variant="outlined" />
-        <button>Search</button>
+        <button><span>Search</span></button>
       </div>
       </div>
       

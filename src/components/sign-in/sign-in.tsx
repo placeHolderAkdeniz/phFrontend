@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import Modal from '@mui/material/Modal';
-import { Box, Typography, TextField, Button, Checkbox } from '@mui/material';
+import { Box, TextField, Button, Checkbox, Typography } from '@mui/material';
 import styles from './sign-in.module.scss';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../AuthContext';
 
 export function SignInModal() {
   const [open, setOpen] = useState(false);
@@ -11,6 +12,7 @@ export function SignInModal() {
   const [error, setError] = useState('');
   const [isSigningIn, setIsSigningIn] = useState(false); 
 
+  const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleOpen = () => setOpen(true);
@@ -18,29 +20,14 @@ export function SignInModal() {
   const label = { inputProps: { 'aria-label': 'Checkbox demo' } };
 
   const handleSignIn = async () => {
-    
     if (isSigningIn) { 
       return;
     }
 
     try {
       setIsSigningIn(true); 
-      const response = await fetch('https://phbackend-m3r9.onrender.com/users/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      });
-      const data = await response.json();
-      
-      if (response.ok) {
-        console.log('Entry successful');
-        console.log(data);
-        navigate('/signedLand');
-      } else {
-        setError(data.error || 'Unknown error occurred');
-      }
+      await login({ email, password });
+      navigate('/signedLand');
     } catch (error) {
       console.error('Entry error:', error);
       setError('Something went wrong. Please try again.');
@@ -73,6 +60,7 @@ export function SignInModal() {
             padding: '50px',
             backgroundColor: '#3acbe1',
             borderRadius: '10px',
+            boxShadow: 'rgba(19, 147, 233, 0.788) 0 15px 30px -5px'
           }}
         >
           <h2>Sign In</h2>
@@ -102,7 +90,7 @@ export function SignInModal() {
                 <p>Remember Me!</p>
             </div>
             
-            <Button variant="contained" onClick={handleSignIn}>Sign In</Button>
+            <Button sx={{backgroundImage: 'linear-gradient(144deg, #AF40FF, #5B42F3 50%, #00DDEB)', color:'white'}} onClick={handleSignIn}>Sign In</Button>
             <div className={styles.links}>
                 <a href="">Forgot Password?</a>
                 <div className={styles.right}>

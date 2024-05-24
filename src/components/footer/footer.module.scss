@@ -3,6 +3,7 @@ $size: 60px;
 .container {  
   display: flex;
   align-items: center;
+  padding: 10px 20px;
   background: #3acbe1;
   flex-direction: column;
   color: white;
@@ -49,7 +50,27 @@ $size: 60px;
             justify-content:end;
             gap: 1rem;
             flex: 1;
-        
+            button {
+              background-image: linear-gradient(144deg, #AF40FF, #5B42F3 50%, #3acbe1);
+              border: 0;
+              color: white;
+              border-radius: 8px;
+              display: flex;
+              font-size: 20px;
+              text-transform: capitalize;
+              justify-content: center;
+              line-height: 1em;
+              max-width: 100%;
+              min-width: 100px;
+              padding: 15px 15px;
+              touch-action: manipulation;
+              cursor: pointer;
+              
+              .button-63:active,
+              .button-63:hover {
+                outline: 0;
+              }
+            }
           
           }
     }
@@ -57,6 +78,9 @@ $size: 60px;
       width: 90%;
       display: flex;
       flex-direction: column;
+      h6{
+        align-self: center;
+      }
     }
     
   }

@@ -9,15 +9,14 @@ interface iRoute {
   path: string;
 }
 
-const logo =
-  "src/assets/images/phlogo.png";
+const logo = "src/assets/images/phlogo.png";
 
 export function STopBar() {
   const location = useLocation();
   const [activeRoute, setActiveRoute] = useState<string>(
     location.pathname.split("/").pop() || ""
   );
- 
+
   return (
     <div className={styles.container}>
       <div className={styles.left}>
@@ -34,8 +33,10 @@ export function STopBar() {
         <a href="">placeHolder</a>
       </div>
       <div className={styles.right}>
-          <AccountMenu/>
+        <AccountMenu />
       </div>
     </div>
   );
 }
+
+export default STopBar;
