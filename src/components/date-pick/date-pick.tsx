@@ -11,7 +11,7 @@ export function DatePick() {
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['SingleInputDateRangeField']}>
+      <DemoContainer components={['SingleInputDateRangeField']} sx={{paddingTop: '0'}}>
         <DateRangePicker
           slots={{ field: SingleInputDateRangeField }}
           slotProps={{ textField: { InputProps: { endAdornment: <Calendar /> } } }}

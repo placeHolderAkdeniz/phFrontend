@@ -31,7 +31,10 @@ export function Footer() {
                     setActiveRoute("");
                 }}
                 />
-                <h3>placeHolder</h3>
+                
+            </div>
+            <div className={styles.center}>
+            <a>placeHolder</a>
             </div>
             
             <div className={styles.right}>
@@ -44,7 +47,8 @@ export function Footer() {
             </div>
 
         </div>
-        <div className={styles.bottom}><Divider />
+        <div className={styles.bottom}>
+        <Divider />
         <h6>© 2024 placeHolder</h6></div>
         
     </div>

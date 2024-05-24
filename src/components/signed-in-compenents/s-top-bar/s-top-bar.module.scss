@@ -37,21 +37,8 @@ $size: 60px;
     .right {
       display: flex;
       justify-content:end;
-      gap: 1rem;
       flex: 1;
-  
-      button {
-        display: flex;
-        justify-content: center;
-        line-height: 1em;
-        touch-action: manipulation;
-        cursor: pointer;
-        
-        .button-63:active,
-        .button-63:hover {
-          outline: 0;
-        }
-      }
+      
     }
   }
   

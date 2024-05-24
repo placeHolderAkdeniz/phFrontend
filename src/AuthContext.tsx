@@ -1,0 +1,111 @@
+import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
+import { useNavigate } from 'react-router-dom';
+
+interface User {
+  _id: string;
+  first_name: string;
+  last_name: string;
+  sex: string;
+  phone_number: string;
+  dob: string;
+  email: string;
+  userType: string;
+  reservations: string[];
+  comments: string[];
+  favorites: string[];
+  createdAt: string;
+  updatedAt: string;
+  city: string;
+  country: string;
+}
+
+interface AuthContextType {
+  user: User | null;
+  loading: boolean;
+  login: (credentials: { email: string; password: string }) => Promise<void>;
+  logout: () => void;
+}
+
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+const AuthProvider = ({ children }: AuthProviderProps) => {
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const token = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
+        console.log("Token: ", token); 
+
+        if (token && storedUser) {
+          const userData = JSON.parse(storedUser);
+          console.log("Stored user data: ", userData); 
+          setUser(userData);
+        }
+      } catch (error) {
+        console.error('Authentication failed:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    checkAuth();
+  }, []);
+
+  const login = async (credentials: { email: string; password: string }) => {
+    try {
+      const response = await fetch('https://phbackend-m3r9.onrender.com/users/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(credentials),
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        console.log("Login user data: ", userData); 
+        setUser(userData.user);
+        localStorage.setItem('token', userData.token);
+        localStorage.setItem('user', JSON.stringify(userData.user)); 
+        navigate('/signedLand');
+      } else {
+        console.error('Login failed:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Login failed:', error);
+    }
+  };
+
+  const logout = () => {
+    setUser(null);
+    localStorage.removeItem('token');
+    localStorage.removeItem('user'); // Remove user data from localStorage
+    navigate('/');
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, loading, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+
+
+export { AuthProvider, useAuth };
