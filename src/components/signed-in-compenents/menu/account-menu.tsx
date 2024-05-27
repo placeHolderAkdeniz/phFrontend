@@ -37,12 +37,11 @@ export default function AccountMenu() {
           <IconButton
             onClick={handleClick}
             size="large"
-            sx={{  }}
             aria-controls={open ? 'account-menu' : undefined}
             aria-haspopup="true"
             aria-expanded={open ? 'true' : undefined}
           >
-            <Avatar sx={{ width: 56, height: 56 }}>M</Avatar> {/* Avatar boyutunu büyüttük */}
+            <Avatar sx={{ width: 56, height: 56 }}>M</Avatar>
           </IconButton>
         </Tooltip>
       </Box>
@@ -77,13 +76,13 @@ export default function AccountMenu() {
               zIndex: 0,
             },
             '& .MuiMenuItem-root': {
-              fontSize: '1.25rem',  // Metin boyutunu büyüt
+              fontSize: '1.25rem',
             },
             '& .MuiSvgIcon-root': {
-              fontSize: '1.5rem',  // İkon boyutunu büyüt
+              fontSize: '1.5rem',
             },
             '& .MuiPaper-root': {
-              minWidth: 200,  // Menü genişliğini ayarla
+              minWidth: 200,
             },
           },
         }}
@@ -104,7 +103,7 @@ export default function AccountMenu() {
           <ListItemIcon>
             <DiamondIcon fontSize="small" />
           </ListItemIcon>
-          pH Point
+          PH Points
         </MenuItem>
         <MenuItem onClick={() => handleMenuItemClick('/review-comments')}>
           <ListItemIcon>
@@ -118,6 +117,7 @@ export default function AccountMenu() {
           </ListItemIcon>
           Favorites
         </MenuItem>
+        <Divider />
         <MenuItem onClick={() => handleMenuItemClick('/logout')}>
           <ListItemIcon>
             <Logout fontSize="small" />
