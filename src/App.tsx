@@ -18,12 +18,17 @@ interface PrivateRouteProps {
 const PrivateRoute = ({ component: Component }: PrivateRouteProps) => {
   const { user, loading } = useAuth();
 
-  console.log("PrivateRoute user:", user); // Log the user state
-  console.log("PrivateRoute loading:", loading); // Log the loading state
+  if (loading) {
+    console.log('Loading user data...');
+    return <div>Loading...</div>;
+  }
 
-  if (loading) return <div>Loading...</div>;
+  if (!user) {
+    console.log('No user found, redirecting to login...');
+    return <Navigate to="/" />;
+  }
 
-  return user ? <Component /> : <Navigate to="/" />;
+  return <Component />;
 };
 
 

@@ -1,7 +1,7 @@
 import React, { createContext, useState, useEffect, useContext, ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-interface User {
+export interface User {
   _id: string;
   first_name: string;
   last_name: string;
@@ -50,11 +50,9 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       try {
         const token = localStorage.getItem('token');
         const storedUser = localStorage.getItem('user');
-        console.log("Token: ", token); 
-
+  
         if (token && storedUser) {
           const userData = JSON.parse(storedUser);
-          console.log("Stored user data: ", userData); 
           setUser(userData);
         }
       } catch (error) {
@@ -63,11 +61,13 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         setLoading(false);
       }
     };
-
+  
     checkAuth();
   }, []);
+  
 
   const login = async (credentials: { email: string; password: string }) => {
+    console.log('Attempting login...');
     try {
       const response = await fetch('https://phbackend-m3r9.onrender.com/users/login', {
         method: 'POST',
@@ -76,13 +76,17 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         },
         body: JSON.stringify(credentials),
       });
-
+  
       if (response.ok) {
-        const userData = await response.json();
-        console.log("Login user data: ", userData); 
-        setUser(userData.user);
-        localStorage.setItem('token', userData.token);
-        localStorage.setItem('user', JSON.stringify(userData.user)); 
+        const loginData = await response.json();
+        const token = loginData.tokens.acces_token;
+  
+        console.log('Login successful, token:', token);
+        console.log('Login response:', loginData);
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(loginData));
+        console.log('localStorage token:', localStorage.getItem('token'));
+        setUser(loginData);
         navigate('/signedLand');
       } else {
         console.error('Login failed:', response.statusText);
@@ -91,11 +95,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
       console.error('Login failed:', error);
     }
   };
+  
 
   const logout = () => {
     setUser(null);
     localStorage.removeItem('token');
-    localStorage.removeItem('user'); // Remove user data from localStorage
+    localStorage.removeItem('user');
     navigate('/');
   };
 
@@ -105,7 +110,5 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     </AuthContext.Provider>
   );
 };
-
-
 
 export { AuthProvider, useAuth };
