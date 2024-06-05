@@ -1,75 +1,68 @@
 import styles from './signedLand.module.scss'
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import {STopBar} from '../../components/signed-in-compenents/s-top-bar/s-top-bar';
 import {SearchBar} from '../../components/search-bar/search-bar';
 import SlideHotels from '../../components/slide-hotels/slide-hotels';
 import {Footer}  from '../../components/footer/footer';
 
-const MostRecommended = [
-  {
-    name: "Hotel 1",
-    image: "src/assets/images/hotel.png",
-    description: "Description for Hotel 1",
-    likes: 15,
-    comments: 3,
-  },
-  {
-    name: "Hotel 2",
-    image: "src/assets/images/hotel.png",
-    description: "Description for Hotel 2",
-    likes: 20,
-    comments: 2,
-  },
-  {
-    name: "Hotel 3",
-    image: "src/assets/images/hotel.png",
-    description: "Description for Hotel 3",
-    likes: 5,
-    comments: 5,
-  },
-  {
-    name: "Hotel 4",
-    image: "src/assets/images/hotel.png",
-    description: "Description for Hotel 4",
-    likes: 12,
-    comments: 1,
-  },
-  {
-    name: "Hotel 5",
-    image: "src/assets/images/hotel.png",
-    description: "Description for Hotel 5",
-    likes: 3,
-    comments: 14,
-  },
-  {
-    name: "Hotel 6",
-    image: "src/assets/images/hotel.png",
-    description: "Description for Hotel 5",
-    likes: 3,
-    comments: 14,
-  },
-  {
-    name: "Hotel 7",
-    image: "src/assets/images/hotel.png",
-    description: "Description for Hotel 5",
-    likes: 3,
-    comments: 14,
-  },
-  {
-    name: "Hotel 8",
-    image: "src/assets/images/hotel.png",
-    description: "Description for Hotel 5",
-    likes: 3,
-    comments: 14,
-  },
-];
 
-function SignedLand() {
-  const slides = MostRecommended.map((hotel, index) => {
-    return {
-      hotels: [hotel]
+interface Hotel {
+  name: string;
+  image: string;
+  description: string;
+  comments: number;
+  average_stars: number;
+}
+
+const SignedLand: React.FC = () => {
+  const [hotels, setHotels] = useState<Hotel[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchHotels = async () => {
+      try {
+        const response = await fetch('https://phbackend-m3r9.onrender.com/hotels');
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data: any[] = await response.json();
+        console.log('Fetched hotels:', data);
+
+        const fetchedHotels: Hotel[] = data.map((hotel: any) => ({
+          name: hotel.hotel_name,
+          image: hotel.image.name , 
+          description: hotel.hotel_desc,
+          comments: hotel.comments.length,
+          average_stars: hotel.average_star || 0
+        }));
+
+        const topHotels = fetchedHotels.sort((a: Hotel, b: Hotel) => b.average_stars - a.average_stars).slice(0, 8);
+        console.log('Top hotels:', topHotels);
+
+        setHotels(topHotels);
+      } catch (error) {
+        console.error('Error fetching hotels:', error);
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('An unexpected error occurred');
+        }
+      } finally {
+        setLoading(false);
+      }
     };
-  });
+
+    fetchHotels();
+  }, []);
+
+  // if (loading) {
+  //   return <div>Loading...</div>;
+  // }
+
+  // if (error) {
+  //   return <div>Error: {error}</div>;
+  // }
 
   return (
     <div className={styles.container}>
@@ -78,9 +71,8 @@ function SignedLand() {
         <SearchBar/>
         <div className={styles.middle}>
           <h1>Featured Hotels</h1>
-          <SlideHotels slides={slides} />
-          <h1>Nearby Hotels</h1>
-          <SlideHotels slides={slides} />
+          <SlideHotels hotels={hotels} />
+          
         </div>
         
       </div>

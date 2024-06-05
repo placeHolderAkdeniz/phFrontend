@@ -12,11 +12,23 @@ import styles from './slide-hotel.module.scss';
 
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
-const SlideHotels: React.FC<{ slides: { hotels: { name: string; image: string; description: string; likes: number; comments: number; }[] }[] }> = ({ slides }) => {
+interface Hotel {
+  name: string;
+  image: string;
+  description: string;
+  comments: number;
+  average_stars: number;
+}
+
+interface SlideHotelsProps {
+  hotels: Hotel[];
+}
+
+const SlideHotels: React.FC<SlideHotelsProps> = ({ hotels = [] }) => {
   const theme = useTheme();
   const [activeStep, setActiveStep] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
-  const maxSteps = Math.ceil(slides.length / 4);
+  const maxSteps = Math.ceil(hotels.length / 4);
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -39,31 +51,26 @@ const SlideHotels: React.FC<{ slides: { hotels: { name: string; image: string; d
   };
 
   return (
-    <Box sx={{ maxWidth: "500", flexGrow: 1}} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
-      
+    <Box sx={{ maxWidth: '100%', flexGrow: 1, flexDirection: 'column' }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <AutoPlaySwipeableViews
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
         index={activeStep}
         onChangeIndex={handleStepChange}
         enableMouseEvents={autoPlay}
         interval={10000}
-        autoplay={autoPlay}
+        autoplay={false}
       >
         {[...Array(maxSteps)].map((_, index) => (
-          <div key={`slide-${index}`} style={{ display: 'flex' }} className={styles.bir}>
-            {slides.slice(index * 4, (index + 1) * 4).map((slide, slideIndex) => (
-              <div key={`hotel-group-${index}-${slideIndex}`} style={{ flex: 1 }}>
-                {slide.hotels.map((hotel, hotelIndex) => (
-                  <div key={`hotel-${index}-${slideIndex}-${hotelIndex}`} style={{ marginBottom: 16 }}>
-                    <HotelCard
-                      name={hotel.name}
-                      image={hotel.image}
-                      description={hotel.description}
-                      likes={hotel.likes}
-                      comments={hotel.comments}
-                    />
-                  </div>
-                ))}
+          <div key={`slide-${index}`} className={styles.centerContainer}>
+            {hotels.slice(index * 4, (index + 1) * 4).map((hotel, hotelIndex) => (
+              <div key={`hotel-${index}-${hotelIndex}`} className={styles.hotelCard}>
+                <HotelCard
+                  name={hotel.name}
+                  image={hotel.image}
+                  description={hotel.description}
+                  average_stars={hotel.average_stars}
+                  comments={hotel.comments}
+                />
               </div>
             ))}
           </div>
@@ -74,27 +81,14 @@ const SlideHotels: React.FC<{ slides: { hotels: { name: string; image: string; d
         position="static"
         activeStep={activeStep}
         nextButton={
-          <Button
-            size="small"
-            onClick={handleNext}
-            disabled={activeStep === maxSteps - 1}
-            style={{ float: 'right' }}
-          >
+          <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
             Next
-            {theme.direction === 'rtl' ? (
-              <KeyboardArrowLeft />
-            ) : (
-              <KeyboardArrowRight />
-            )}
+            {theme.direction === 'rtl' ? <KeyboardArrowLeft /> : <KeyboardArrowRight />}
           </Button>
         }
         backButton={
-          <Button size="small" onClick={handleBack} disabled={activeStep === 0} style={{ float: 'left' }}>
-            {theme.direction === 'rtl' ? (
-              <KeyboardArrowRight />
-            ) : (
-              <KeyboardArrowLeft />
-            )}
+          <Button size="small" onClick={handleBack} disabled={activeStep === 0}>
+            {theme.direction === 'rtl' ? <KeyboardArrowRight /> : <KeyboardArrowLeft />}
             Back
           </Button>
         }

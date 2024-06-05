@@ -28,7 +28,7 @@ export function SearchBar() {
       <DatePick/>
       </div>
       <div className={styles.right}>
-        <TextField id="room-number" label="Room #" variant="outlined" />
+        <TextField id="people-number" label="# of people" variant="outlined" />
         <button><span>Search</span></button>
       </div>
       </div>

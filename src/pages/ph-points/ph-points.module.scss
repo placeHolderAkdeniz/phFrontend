@@ -1,0 +1,134 @@
+$gap: 30px;
+
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: $gap;
+  
+  .middle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+    gap: $gap;
+    width: 60vw;
+    height: 50vi;
+    background-color: rgba(2, 207, 207, 0.342);
+    padding: 20px;
+    border-radius: 10px;
+
+    .cardContainer {
+      display: flex;
+      justify-content: space-around;
+      flex-direction: row;
+      width: 100%;
+    }
+
+    .card {
+      position: relative;
+      width: 220px;
+      height: 284px;
+      color: #fff;
+      transition: 0.5s;
+      cursor: pointer;
+      margin-top: 100px;
+      
+      &:hover {
+        transform: translateY(-20px);
+      }
+      
+      &::before,
+      &::after {
+        content: '';
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 0;
+        left: 0;
+        border-radius: 1.2em;
+      }
+
+      &::after {
+        filter: blur(30px);
+      }
+      
+      span {
+        position: absolute;
+        top: 6px;
+        left: 6px;
+        right: 6px;
+        bottom: 6px;
+        background-color: rgba(0, 0, 0, 0.6);
+        z-index: 2;
+        border-radius: 1em;
+      
+        &::before {
+          content: '';
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 50%;
+          height: 100%;
+          background-color: rgba(255, 255, 255, 0.1);
+        }
+      }
+      
+      .content {
+        position: relative;
+        padding: 10px;
+        z-index: 10;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 1.5em;
+      }
+
+      .info {
+        position: absolute;
+        top: 10px;
+        width: 100%;
+        text-align: center;
+        font-weight: bold;
+        font-size: 1.2em;
+        
+      }
+      
+      &.silver {
+        &::before,
+        &::after {
+          background: linear-gradient(45deg, #C0C0C0, #c0c0c0);
+        }
+      }
+
+      &.gold {
+        &::before,
+        &::after {
+          background: linear-gradient(45deg, #FFD700, #ffd700);
+        }
+      }
+
+      &.emerald {
+        &::before,
+        &::after {
+          background: linear-gradient(45deg, #50C878, #50c878);
+        }
+      }
+
+      &.active {
+        transform: scale(1.3);
+      }
+    }
+  }
+  
+  .footer {
+    position: inherit;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+}
