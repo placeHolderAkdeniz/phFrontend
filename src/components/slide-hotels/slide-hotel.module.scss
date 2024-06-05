@@ -1,25 +1,37 @@
 .sliderContainer {
+  display: flex;
+  flex-direction: column;
+
+  .slickSlider {
+    position: relative;
+    justify-content: center;
     display: flex;
-    flex-direction: column;
-  
-    .slickSlider {
+    touch-action: pan-y;
+    -webkit-tap-highlight-color: transparent;
+
+    .slickList {
+      gap: 10px;
       position: relative;
-      justify-content: center;
       display: flex;
-      touch-action: pan-y;
-      -webkit-tap-highlight-color: transparent;
-  
-      .slickList {
-        gap: 10px;
-        position: relative;
-        display: flex;
-        overflow: hidden;
-  
-        &:focus {
-          outline: none;
-        }
-  
+      overflow: hidden;
+
+      &:focus {
+        outline: none;
       }
     }
   }
-  
+}
+
+.centerContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.hotelCard {
+  width: 300px;
+  height: 400px;
+  margin: 10px;
+}

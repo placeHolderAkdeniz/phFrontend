@@ -10,6 +10,7 @@ import Favorites from './pages/favorites/favorites';
 import PHPoint from './pages/ph-points/ph-points';
 import ReviewComments from './pages/review-comments/review-comments';
 import Logout from './pages/logout/logout';
+import HotelPage from './pages/hotel-page/hotel-page';
 
 interface PrivateRouteProps {
   component: React.ComponentType;
@@ -46,6 +47,7 @@ function App() {
             <Route path="/ph-point" element={<PrivateRoute component={PHPoint} />} />
             <Route path="/review-comments" element={<PrivateRoute component={ReviewComments} />} />
             <Route path="/favorites" element={<PrivateRoute component={Favorites} />} />
+            <Route path="/hotel" element={<HotelPage/>} />
             <Route path="/logout" element={<Logout />} />
           </Routes>
         </AuthProvider>
