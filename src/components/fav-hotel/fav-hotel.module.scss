@@ -4,7 +4,6 @@
     align-items: center;
     margin: 10px;
     max-width: 300px;
-    max-height: 450px;
     border: 0px;
     border-radius: 10px;
     background-color: #3acbe1;
@@ -43,18 +42,26 @@
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 5px; 
+        gap: 10px; 
         margin-bottom: .2rem;
-        padding: 5px 10px;
-        .location{
-          border-radius: 5px;
-          padding: 5px;
-          background-image: linear-gradient(144deg, #AF40FF, #5B42F3 50%, #00DDEB);
-          color: white;
-          font-size: small;
-          font-weight: bold;
-        }
+        padding: 10px 15px;
+        .favoriteButton {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background-color: white;
+            border-radius: 50%;
+            z-index: 2;
+            &:hover {
+              background-color: lightgray;
+            }
+            svg {
+              font-size: 24px;
+            }
+          }
       }
+      
+      
     }
   }
   

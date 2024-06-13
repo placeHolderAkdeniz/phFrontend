@@ -1,86 +1,97 @@
-import * as React from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './search-bar.module.scss';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import { DatePick } from '../date-pick/date-pick';
+import DatePicker from '../date-picker/date-picker';
 
-export function SearchBar() {
+interface SearchBarProps {
+  onSearch: (criteria: { city: string; checkInDate: string; checkOutDate: string; personCount: number }) => void;
+}
+
+export function SearchBar({ onSearch }: SearchBarProps) {
+  const [locations, setLocations] = useState<{ city: string }[]>([]);
+  const [selectedCity, setSelectedCity] = useState<{ city: string } | null>(null);
+  const [checkInDate, setCheckInDate] = useState<string>('');
+  const [checkOutDate, setCheckOutDate] = useState<string>('');
+  const [personCount, setPersonCount] = useState<number>(1);
+  const [priceValue, setPriceValue] = useState<number>(1);
+
+  useEffect(() => {
+    const fetchLocations = async () => {
+      try {
+        const response = await fetch('https://phbackend-m3r9.onrender.com/hotels');
+        if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+        const data: any[] = await response.json();
+
+        const uniqueCities = Array.from(new Set(data.map(hotel => hotel.city)))
+          .map(city => ({ city }));
+
+        console.log("Fetched locations: ", uniqueCities);
+        setLocations(uniqueCities);
+      } catch (error) {
+        console.error('Error fetching locations:', error);
+      }
+    };
+
+    fetchLocations();
+  }, []);
+
+  const handleSearchClick = () => {
+    if (selectedCity && checkInDate && checkOutDate && personCount &&priceValue) {
+      onSearch({
+        city: selectedCity.city,
+        checkInDate,
+        checkOutDate,
+        personCount,
+      });
+    } else {
+      alert('Please fill in all search criteria.');
+    }
+  };
+
   return (
     <div className={styles.container}>
       <div className={styles.content}>
-      <div className={styles.left}>
-        <Autocomplete
-        multiple
-        id="tags-outlined"
-        options={locations}
-        getOptionLabel={(option) => option.location}
-        defaultValue={[locations[0]]}
-        filterSelectedOptions
-        renderInput={(params) => (
-          <TextField
-            {...params}
-            label="Location"
-            placeholder="Choose location"
+        <div className={styles.left}>
+          <Autocomplete
+            options={locations}
+            getOptionLabel={(option) => option.city}
+            onChange={(event, value) => setSelectedCity(value)}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="City"
+                placeholder="Choose city"
+              />
+            )}
+            style={{ width: 300 }}
           />
-        )}
-      /></div>
-      <div className={styles.mid}>
-      <DatePick/>
+        </div>
+        <div className={styles.mid}>
+          <DatePicker/>
+        </div>
+        <div className={styles.right}>
+          <TextField
+            id="people-number"
+            label="# of people"
+            type="number"
+            variant="outlined"
+            value={personCount}
+            onChange={(e) => setPersonCount(parseInt(e.target.value) || 1)}
+          />
+          <TextField
+            id="price"
+            label="Price $"
+            type="number"
+            variant="outlined"
+            value={priceValue}
+            onChange={(e) => setPriceValue(parseInt(e.target.value) || 1)}
+          />
+          <button onClick={handleSearchClick}>
+            <span>Search</span>
+          </button>
+        </div>
       </div>
-      <div className={styles.right}>
-        <TextField id="people-number" label="# of people" variant="outlined" />
-        <button><span>Search</span></button>
-      </div>
-      </div>
-      
-      
-      
     </div>
   );
 }
-
-
-
-const locations = [
-  { location: 'Antalya, Turkey' },
-  { location: 'Adana, Turkey' },
-  { location: 'New York, USA' },
-  { location: 'Paris, France' },
-  { location: 'Tokyo, Japan' },
-  { location: 'London, England' },
-  { location: 'Los Angeles, California, USA' },
-  { location: 'Rome, Italy' },
-  { location: 'Sydney, Australia' },
-  { location: 'Rio de Janeiro, Brazil' },
-  { location: 'Moscow, Russia' },
-  { location: 'Berlin, Germany' },
-  { location: 'Istanbul, Turkey' },
-  { location: 'Cairo, Egypt' },
-  { location: 'Dubai, United Arab Emirates' },
-  { location: 'Mumbai, India' },
-  { location: 'Toronto, Ontario, Canada' },
-  { location: 'Mexico City, Mexico' },
-  { location: 'Cape Town, South Africa' },
-  { location: 'Bangkok, Thailand' },
-  { location: 'Seoul, South Korea' },
-  { location: 'Havana, Cuba' },
-  { location: 'Buenos Aires, Argentina' },
-  { location: 'Amsterdam, Netherlands' },
-  { location: 'Athens, Greece' },
-  { location: 'Hong Kong, China' },
-  { location: 'Dublin, Ireland' },
-  { location: 'Madrid, Spain' },
-  { location: 'Vienna, Austria' },
-  { location: 'Stockholm, Sweden' },
-  { location: 'Zurich, Switzerland' },
-  { location: 'Oslo, Norway' },
-  { location: 'Helsinki, Finland' },
-  { location: 'Brussels, Belgium' },
-  { location: 'Warsaw, Poland' },
-  { location: 'Prague, Czech Republic' },
-  { location: 'Budapest, Hungary' },
-  { location: 'Lisbon, Portugal' },
-  { location: 'Copenhagen, Denmark' },
-  { location: 'Edinburgh, Scotland' },
-  { location: 'Auckland, New Zealand' }
-];

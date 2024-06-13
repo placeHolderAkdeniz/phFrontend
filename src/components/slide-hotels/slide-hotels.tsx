@@ -9,16 +9,9 @@ import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
 import HotelCard from "../hotel-card/hotel-card";
 import styles from './slide-hotel.module.scss';
-
+import {Hotel} from '../hotel-card/hotel-card';
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
 
-interface Hotel {
-  name: string;
-  image: string;
-  description: string;
-  comments: number;
-  average_stars: number;
-}
 
 interface SlideHotelsProps {
   hotels: Hotel[];
@@ -51,7 +44,7 @@ const SlideHotels: React.FC<SlideHotelsProps> = ({ hotels = [] }) => {
   };
 
   return (
-    <Box sx={{ maxWidth: '100%', flexGrow: 1, flexDirection: 'column' }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
+    <Box sx={{ width: '100%', flexGrow: 1, flexDirection: 'column' }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <AutoPlaySwipeableViews
         axis={theme.direction === 'rtl' ? 'x-reverse' : 'x'}
         index={activeStep}
@@ -69,7 +62,11 @@ const SlideHotels: React.FC<SlideHotelsProps> = ({ hotels = [] }) => {
                   image={hotel.image}
                   description={hotel.description}
                   average_stars={hotel.average_stars}
-                  comments={hotel.comments}
+                  hygiene_star={hotel.hygiene_star}
+                  safety_star={hotel.safety_star}
+                  transportation_star={hotel.transportation_star}
+                  city={hotel.city}
+                  country={hotel.country}
                 />
               </div>
             ))}
@@ -80,6 +77,7 @@ const SlideHotels: React.FC<SlideHotelsProps> = ({ hotels = [] }) => {
         steps={maxSteps}
         position="static"
         activeStep={activeStep}
+        sx={{display:"flex", justifyItems:"center",}}
         nextButton={
           <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
             Next

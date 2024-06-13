@@ -28,10 +28,12 @@
   justify-content: center;
   align-items: center;
   flex-wrap: wrap;
+  width: 90%;
+  .hotelCard {
+    width: 300px;
+    height: 80%;
+    margin: 10px;
+  }
 }
 
-.hotelCard {
-  width: 300px;
-  height: 400px;
-  margin: 10px;
-}
+
