@@ -2,19 +2,20 @@ import React from 'react';
 import styles from "./hotel-card.module.scss";
 import StarIcon from '@mui/icons-material/Star';
 
-interface HotelCardProps {
+export interface Hotel {
   name: string;
-  image: string;
+  image: string[];
   description: string;
   average_stars: number;
-  comments: number;
+  hygiene_star: number;
+  safety_star: number;
+  transportation_star: number;
+  city: string;
+  country:string;
 }
 
-const HotelCard: React.FC<HotelCardProps> = ({ name, image, description, average_stars, comments }) => {
-  const handleCommentsClick = () => {
-    console.log('Yorum sayfasına yönlendiriliyor...');
-  };
-
+const HotelCard: React.FC<Hotel> = ({ name, image, description, average_stars, city, country}) => {
+  
   const renderStars = (count: number) => {
     return (
       <>
@@ -28,14 +29,14 @@ const HotelCard: React.FC<HotelCardProps> = ({ name, image, description, average
   return (
     <div className={styles.container}>
       <div className={styles.cardClass}>
-        <img className={styles.media} src={"https://phbackend-m3r9.onrender.com/uploads/"+image} alt={name} />
+        <img className={styles.media} src={image[0]} alt={name} />
         <div className={styles.content}>
           <h3>{name}</h3>
           <p>{description}</p>
         </div>
         <div className={styles.actions}>
           <div>{renderStars(Math.round(average_stars))}</div>
-          <button onClick={handleCommentsClick}>Comments: {comments}</button>
+          <div className={styles.location}>{city}/{country}</div>
         </div>
       </div>
     </div>

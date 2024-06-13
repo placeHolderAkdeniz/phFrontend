@@ -11,6 +11,7 @@ import PHPoint from './pages/ph-points/ph-points';
 import ReviewComments from './pages/review-comments/review-comments';
 import Logout from './pages/logout/logout';
 import HotelPage from './pages/hotel-page/hotel-page';
+import Filtration from './pages/filtration/filtration';
 
 interface PrivateRouteProps {
   component: React.ComponentType;
@@ -41,13 +42,14 @@ function App() {
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Landing />} />
-            <Route path="/signedLand" element={<SignedLand />} />
+            <Route path="/signedLand" element={<PrivateRoute component={SignedLand} />} />
             <Route path="/account-settings" element={<PrivateRoute component={AccountSettings} />} />
             <Route path="/booking-history" element={<PrivateRoute component={BookingHistory} />} />
             <Route path="/ph-point" element={<PrivateRoute component={PHPoint} />} />
             <Route path="/review-comments" element={<PrivateRoute component={ReviewComments} />} />
             <Route path="/favorites" element={<PrivateRoute component={Favorites} />} />
             <Route path="/hotel" element={<HotelPage/>} />
+            <Route path="/filtration" element={<Filtration />} />
             <Route path="/logout" element={<Logout />} />
           </Routes>
         </AuthProvider>

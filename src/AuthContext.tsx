@@ -13,10 +13,12 @@ export interface User {
   reservations: string[];
   comments: string[];
   favorites: string[];
+  isAdmin: boolean;
   createdAt: string;
   updatedAt: string;
   city: string;
   country: string;
+  userPoint: number;
 }
 
 interface AuthContextType {
