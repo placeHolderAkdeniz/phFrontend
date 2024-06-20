@@ -11,12 +11,14 @@ import ReviewComments from './pages/review-comments/review-comments';
 import Logout from './pages/logout/logout';
 import HotelPage from './pages/hotel-page/hotel-page';
 import Filtration from './pages/filtration/filtration';
+import AdminPanel from './pages/admin-panel/admin-panel';
 
 interface PrivateRouteProps {
   component: React.ComponentType;
+  adminOnly?: boolean;
 }
 
-const PrivateRoute = ({ component: Component }: PrivateRouteProps) => {
+const PrivateRoute = ({ component: Component, adminOnly = false }: PrivateRouteProps) => {
   const { user, loading } = useAuth();
 
   if (loading) {
@@ -24,15 +26,13 @@ const PrivateRoute = ({ component: Component }: PrivateRouteProps) => {
     return <div>Loading...</div>;
   }
 
-  if (!user) {
-    console.log('No user found, redirecting to login...');
+  if (!user || (adminOnly && !user.isAdmin)) {
+    console.log('No user found or not authorized, redirecting to login...');
     return <Navigate to="/" />;
   }
 
   return <Component />;
 };
-
-
 
 function App() {
   return (
@@ -50,6 +50,7 @@ function App() {
             <Route path="/hotel/:_id" element={<HotelPage />} />
             <Route path="/filtration" element={<Filtration />} />
             <Route path="/logout" element={<Logout />} />
+            <Route path="/admin-panel" element={<PrivateRoute component={AdminPanel} adminOnly />} />
           </Routes>
         </AuthProvider>
       </Router>

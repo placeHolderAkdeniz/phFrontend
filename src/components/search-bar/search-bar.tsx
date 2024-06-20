@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Use useNavigate if using react-router v6
 import styles from './search-bar.module.scss';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import { Button, Grid, Box, Paper } from '@mui/material';
+import { Box, Button } from '@mui/material';
+import PersonCountPopover from '../person-count/person-count';
 
 interface SearchBarProps {
-  onSearch: (criteria: { city: string; checkInDate: string; checkOutDate: string; personCount: number; price: number }) => void;
+  onSearch: (criteria: { city: string; checkInDate: string; checkOutDate: string; adult: number; child: number }) => void;
 }
 
 export function SearchBar({ onSearch }: SearchBarProps) {
@@ -13,8 +15,11 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   const [selectedCity, setSelectedCity] = useState<{ city: string } | null>(null);
   const [checkInDate, setCheckInDate] = useState<string>('');
   const [checkOutDate, setCheckOutDate] = useState<string>('');
-  const [personCount, setPersonCount] = useState<number>(1);
-  const [priceValue, setPriceValue] = useState<number>(1200);
+  const [adults, setAdults] = useState<number>(1);
+  const [children, setChildren] = useState<number>(0);
+  const [popoverAnchor, setPopoverAnchor] = useState<HTMLElement | null>(null);
+
+  const navigate = useNavigate(); // Use useNavigate if using react-router v6
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -26,7 +31,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
         const uniqueCities = Array.from(new Set(data.map(hotel => hotel.city)))
           .map(city => ({ city }));
 
-        // console.log("Fetched locations: ", uniqueCities);
+       // console.log("Fetched locations: ", uniqueCities);
         setLocations(uniqueCities);
       } catch (error) {
         console.error('Error fetching locations:', error);
@@ -37,88 +42,102 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   }, []);
 
   const handleSearchClick = () => {
-    if (selectedCity && checkInDate && checkOutDate && personCount && priceValue) {
-      onSearch({
+    if (selectedCity && checkInDate && checkOutDate && adults + children > 0) {
+      const searchParams = new URLSearchParams({
         city: selectedCity.city,
         checkInDate,
         checkOutDate,
-        personCount,
-        price: priceValue
+        adult: adults.toString(),
+        child: children.toString(),
       });
+      navigate(`/filtration?${searchParams.toString()}`);
     } else {
       alert('Please fill in all search criteria.');
     }
   };
 
+  const handlePopoverOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setPopoverAnchor(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setPopoverAnchor(null);
+  };
+
+  const getTodayDateString = () => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  };
+
   return (
     <Box className={styles.container} sx={{ p: 3 }}>
-      <Paper elevation={3} sx={{ p: 3 }}>
-        <Grid className={styles.content} container spacing={2}>
-
-            <Grid item xs={12} sm={6} md={4}>
-              <Autocomplete
-                options={locations}
-                getOptionLabel={(option) => option.city}
-                onChange={(event, value) => setSelectedCity(value)}
-                renderInput={(params) => (
-                  <TextField
-                    {...params}
-                    label="City"
-                    placeholder="Choose city"
-                    fullWidth
-                  />
-                )}
-              />
-            </Grid>
-          
-            <Grid item xs={12} sm={6} md={4}>
+      <div className={styles.content}>
+        <div className={styles.label}>
+          <Autocomplete
+            options={locations}
+            getOptionLabel={(option) => option.city}
+            onChange={(event, value) => setSelectedCity(value)}
+            renderInput={(params) => (
               <TextField
+                {...params}
+                label="City"
+                placeholder="Choose city"
                 fullWidth
-                label="Check-In Date"
-                type="date"
-                InputLabelProps={{ shrink: true }}
-                value={checkInDate}
-                onChange={(e) => setCheckInDate(e.target.value)}
               />
-            </Grid>
-            <Grid item xs={12} sm={6} md={4}>
-              <TextField
-                fullWidth
-                label="Check-Out Date"
-                type="date"
-                InputLabelProps={{ shrink: true }}
-                value={checkOutDate}
-                onChange={(e) => setCheckOutDate(e.target.value)}
-              />
-            </Grid>
+            )}
+          />
+        </div>
 
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              fullWidth
-              type="number"
-              label="# of People"
-              value={personCount}
-              onChange={(e) => setPersonCount(parseInt(e.target.value) || 1)}
-            />
-          </Grid>
-          <Grid item xs={12} sm={6} md={4}>
-            <TextField
-              fullWidth
-              type="number"
-              label="Price $"
-              value={priceValue}
-              onChange={(e) => setPriceValue(parseInt(e.target.value) || 1)}
-            />
-          </Grid>
-          <Grid item xs={12} md={4}>
-            <div className={styles.right}>
-          <button  onClick={handleSearchClick}>
-            <span>Search</span>
+        <div className={styles.label}>
+          <TextField
+            fullWidth
+            label="Check-In Date"
+            type="date"
+            InputLabelProps={{ shrink: true }}
+            value={checkInDate}
+            onChange={(e) => setCheckInDate(e.target.value)}
+            inputProps={{ min: getTodayDateString() }}
+          />
+        </div>
+        <div className={styles.label}>
+          <TextField
+            fullWidth
+            label="Check-Out Date"
+            type="date"
+            InputLabelProps={{ shrink: true }}
+            value={checkOutDate}
+            onChange={(e) => setCheckOutDate(e.target.value)}
+            inputProps={{ min: getTodayDateString() }}
+          />
+        </div>
+
+        <div className={styles.label}>
+          <TextField
+            fullWidth
+            label="People"
+            value={`${adults} Adults, ${children} Children`}
+            onClick={handlePopoverOpen}
+            InputProps={{
+              readOnly: true,
+            }}
+          />
+        </div>
+
+        <div className={styles.right}>
+          <button onClick={handleSearchClick}>
+            Search
           </button>
-          </div>
-          </Grid>
-        </Grid>
-      </Paper>
+        </div>
+      </div>
+
+      <PersonCountPopover
+        anchorEl={popoverAnchor}
+        onClose={handlePopoverClose}
+        adults={adults}
+        setAdults={setAdults}
+        children={children}
+        setChildren={setChildren}
+      />
     </Box>
   );
 }

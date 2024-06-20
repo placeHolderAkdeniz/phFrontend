@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './landing.module.scss';
 import { TopBar } from '../../components/top-bar/top-bar';
-import {STopBar} from '../../components/signed-in-compenents/s-top-bar/s-top-bar';
+import { STopBar } from '../../components/signed-in-compenents/s-top-bar/s-top-bar';
 import { SearchBar } from '../../components/search-bar/search-bar';
 import SlideHotels from '../../components/slide-hotels/slide-hotels';
 import { Footer } from '../../components/footer/footer';
@@ -46,15 +46,15 @@ const Landing: React.FC = () => {
           .slice(0, 8);
 
         const safety_hotels = fetchedHotels
-          .sort((a: Hotel, b: Hotel) => b.average_stars - a.average_stars)
+          .sort((a: Hotel, b: Hotel) => b.safety_star - a.safety_star)
           .slice(0, 8);
 
         const hygienic_hotels = fetchedHotels
-          .sort((a: Hotel, b: Hotel) => b.average_stars - a.average_stars)
+          .sort((a: Hotel, b: Hotel) => b.hygiene_star - a.hygiene_star)
           .slice(0, 8);
 
         const reachable_hotels = fetchedHotels
-          .sort((a: Hotel, b: Hotel) => b.average_stars - a.average_stars)
+          .sort((a: Hotel, b: Hotel) => b.transportation_star - a.transportation_star)
           .slice(0, 8);
 
         setTopHotels(top_hotels);
@@ -76,23 +76,21 @@ const Landing: React.FC = () => {
     // Kullanıcı oturum durumunu kontrol edin
     const checkLoginStatus = () => {
       const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
-      console.log('local',localStorage.getItem('isLoggedIn'));
-      
+      // console.log('local', localStorage.getItem('isLoggedIn'));
+
       setIsLoggedIn(loggedIn);
-      console.log('logged in: ',loggedIn);
+      //console.log('logged in: ', loggedIn);
     };
 
     fetchHotels();
     checkLoginStatus();
-    console.log('check status: ',checkLoginStatus);
-    
+    //console.log('check status: ', checkLoginStatus);
+
   }, []);
 
-  const handleSearch = (criteria: { city: string; checkInDate: string; checkOutDate: string; personCount: number; price: number }) => {
-    // Arama kriterlerini localStorage'a kaydediyoruz
-    localStorage.setItem('searchCriteria', JSON.stringify(criteria));
-    // Filtration sayfasına yönlendiriyoruz
-    navigate(`/filtration?city=${encodeURIComponent(criteria.city)}&checkInDate=${criteria.checkInDate}&checkOutDate=${criteria.checkOutDate}&personCount=${criteria.personCount}&price=${criteria.price}`);
+  const handleSearch = (criteria: { city: string; checkInDate: string; checkOutDate: string; adult: number; child: number }) => {
+    // Arama kriterlerini URL parametrelerine ekleyerek Filtration sayfasına yönlendiriyoruz
+    navigate(`/filtration?city=${encodeURIComponent(criteria.city)}&checkInDate=${criteria.checkInDate}&checkOutDate=${criteria.checkOutDate}&adult=${criteria.adult}&child=${criteria.child}`);
   };
 
   if (loading) {

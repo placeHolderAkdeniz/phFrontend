@@ -9,7 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DiamondIcon from '@mui/icons-material/Diamond';
 import CommentIcon from '@mui/icons-material/Comment';
-import { Favorite, History, Logout } from '@mui/icons-material';
+import { Favorite, History, Logout, AdminPanelSettings } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../AuthContext';
 
@@ -17,7 +17,7 @@ export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
-  const { logout } = useAuth();
+  const { user, logout } = useAuth();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -31,10 +31,10 @@ export default function AccountMenu() {
     navigate(path);
     handleClose();
   };
+
   const handleLogOut = () => {
     logout();
   };
-  
 
   return (
     <React.Fragment>
@@ -123,8 +123,16 @@ export default function AccountMenu() {
           </ListItemIcon>
           Favorites
         </MenuItem>
+        {user?.isAdmin && (
+          <MenuItem onClick={() => handleMenuItemClick('/admin-panel')}>
+            <ListItemIcon>
+              <AdminPanelSettings fontSize="small" />
+            </ListItemIcon>
+            Panel
+          </MenuItem>
+        )}
         <Divider />
-        <MenuItem onClick={() => handleLogOut()}>
+        <MenuItem onClick={handleLogOut}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

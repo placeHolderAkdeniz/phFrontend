@@ -90,7 +90,7 @@ export function SignInModal() {
                 <p>Remember Me!</p>
             </div>
             
-            <Button sx={{backgroundImage: 'linear-gradient(144deg, #AF40FF, #5B42F3 50%, #00DDEB)', color:'white'}} onClick={handleSignIn}>Sign In</Button>
+            <button onClick={handleSignIn}>Sign In</button>
             <div className={styles.links}>
                 <a href="">Forgot Password?</a>
                 <div className={styles.right}>
