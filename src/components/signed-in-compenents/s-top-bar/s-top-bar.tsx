@@ -1,9 +1,8 @@
 import * as React from "react";
 import styles from "./s-top-bar.module.scss";
 import { useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import AccountMenu from "../menu/account-menu";
-
 
 const logo = "src/assets/images/phlogo.png";
 
@@ -34,3 +33,5 @@ export function STopBar() {
     </div>
   );
 }
+
+export default STopBar;

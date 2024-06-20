@@ -11,11 +11,13 @@ import DiamondIcon from '@mui/icons-material/Diamond';
 import CommentIcon from '@mui/icons-material/Comment';
 import { Favorite, History, Logout } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../../../AuthContext';
 
 export default function AccountMenu() {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -29,6 +31,10 @@ export default function AccountMenu() {
     navigate(path);
     handleClose();
   };
+  const handleLogOut = () => {
+    logout();
+  };
+  
 
   return (
     <React.Fragment>
@@ -118,7 +124,7 @@ export default function AccountMenu() {
           Favorites
         </MenuItem>
         <Divider />
-        <MenuItem onClick={() => handleMenuItemClick('/logout')}>
+        <MenuItem onClick={() => handleLogOut()}>
           <ListItemIcon>
             <Logout fontSize="small" />
           </ListItemIcon>

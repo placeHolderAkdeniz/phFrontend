@@ -26,7 +26,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
         const uniqueCities = Array.from(new Set(data.map(hotel => hotel.city)))
           .map(city => ({ city }));
 
-        console.log("Fetched locations: ", uniqueCities);
+        // console.log("Fetched locations: ", uniqueCities);
         setLocations(uniqueCities);
       } catch (error) {
         console.error('Error fetching locations:', error);
