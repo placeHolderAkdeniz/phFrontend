@@ -103,6 +103,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+    localStorage.clear;
     navigate('/');
   };
 

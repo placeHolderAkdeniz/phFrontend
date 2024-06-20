@@ -4,6 +4,7 @@ $gap: 30px;
   display: flex;
   flex-direction: column;
   gap: $gap;
+  
 
   .content {
     display: flex;
@@ -13,11 +14,19 @@ $gap: 30px;
     gap: $gap;
     margin-left: 30px;
     margin-right: 30px;
-    width: 60vw;  
+    width: 60vw;
+    height: fit-content;  
     background-color: rgba(2, 207, 207, 0.342);
     padding: 20px; 
     border-radius: 10px; 
-
+    .bookings{
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 100%;
+      gap: 60px;
+    }
     
   }
 

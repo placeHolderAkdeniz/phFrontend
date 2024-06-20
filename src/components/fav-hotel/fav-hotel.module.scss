@@ -46,14 +46,13 @@
         margin-bottom: .2rem;
         padding: 10px 15px;
         .favoriteButton {
-            position: absolute;
+          
             top: 10px;
             left: 10px;
-            background-color: white;
-            border-radius: 50%;
+            border-radius: 70%;
             z-index: 2;
             &:hover {
-              background-color: lightgray;
+              color: white;
             }
             svg {
               font-size: 24px;

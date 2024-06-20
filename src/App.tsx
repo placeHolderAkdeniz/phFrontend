@@ -48,7 +48,7 @@ function App() {
             <Route path="/ph-point" element={<PrivateRoute component={PHPoint} />} />
             <Route path="/review-comments" element={<PrivateRoute component={ReviewComments} />} />
             <Route path="/favorites" element={<PrivateRoute component={Favorites} />} />
-            <Route path="/hotel" element={<HotelPage/>} />
+            <Route path="/hotel/:_id" element={<HotelPage />} />
             <Route path="/filtration" element={<Filtration />} />
             <Route path="/logout" element={<Logout />} />
           </Routes>

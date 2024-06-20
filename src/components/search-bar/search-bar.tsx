@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react';
 import styles from './search-bar.module.scss';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import DatePicker from '../date-picker/date-picker';
+import { Button, Grid, Box, Paper } from '@mui/material';
 
 interface SearchBarProps {
-  onSearch: (criteria: { city: string; checkInDate: string; checkOutDate: string; personCount: number }) => void;
+  onSearch: (criteria: { city: string; checkInDate: string; checkOutDate: string; personCount: number; price: number }) => void;
 }
 
 export function SearchBar({ onSearch }: SearchBarProps) {
@@ -14,7 +14,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   const [checkInDate, setCheckInDate] = useState<string>('');
   const [checkOutDate, setCheckOutDate] = useState<string>('');
   const [personCount, setPersonCount] = useState<number>(1);
-  const [priceValue, setPriceValue] = useState<number>(1);
+  const [priceValue, setPriceValue] = useState<number>(1200);
 
   useEffect(() => {
     const fetchLocations = async () => {
@@ -37,12 +37,13 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   }, []);
 
   const handleSearchClick = () => {
-    if (selectedCity && checkInDate && checkOutDate && personCount &&priceValue) {
+    if (selectedCity && checkInDate && checkOutDate && personCount && priceValue) {
       onSearch({
         city: selectedCity.city,
         checkInDate,
         checkOutDate,
         personCount,
+        price: priceValue
       });
     } else {
       alert('Please fill in all search criteria.');
@@ -50,48 +51,74 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   };
 
   return (
-    <div className={styles.container}>
-      <div className={styles.content}>
-        <div className={styles.left}>
-          <Autocomplete
-            options={locations}
-            getOptionLabel={(option) => option.city}
-            onChange={(event, value) => setSelectedCity(value)}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label="City"
-                placeholder="Choose city"
+    <Box className={styles.container} sx={{ p: 3 }}>
+      <Paper elevation={3} sx={{ p: 3 }}>
+        <Grid className={styles.content} container spacing={2}>
+
+            <Grid item xs={12} sm={6} md={4}>
+              <Autocomplete
+                options={locations}
+                getOptionLabel={(option) => option.city}
+                onChange={(event, value) => setSelectedCity(value)}
+                renderInput={(params) => (
+                  <TextField
+                    {...params}
+                    label="City"
+                    placeholder="Choose city"
+                    fullWidth
+                  />
+                )}
               />
-            )}
-            style={{ width: 300 }}
-          />
-        </div>
-        <div className={styles.mid}>
-          <DatePicker/>
-        </div>
-        <div className={styles.right}>
-          <TextField
-            id="people-number"
-            label="# of people"
-            type="number"
-            variant="outlined"
-            value={personCount}
-            onChange={(e) => setPersonCount(parseInt(e.target.value) || 1)}
-          />
-          <TextField
-            id="price"
-            label="Price $"
-            type="number"
-            variant="outlined"
-            value={priceValue}
-            onChange={(e) => setPriceValue(parseInt(e.target.value) || 1)}
-          />
-          <button onClick={handleSearchClick}>
+            </Grid>
+          
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                fullWidth
+                label="Check-In Date"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                value={checkInDate}
+                onChange={(e) => setCheckInDate(e.target.value)}
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                fullWidth
+                label="Check-Out Date"
+                type="date"
+                InputLabelProps={{ shrink: true }}
+                value={checkOutDate}
+                onChange={(e) => setCheckOutDate(e.target.value)}
+              />
+            </Grid>
+
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              fullWidth
+              type="number"
+              label="# of People"
+              value={personCount}
+              onChange={(e) => setPersonCount(parseInt(e.target.value) || 1)}
+            />
+          </Grid>
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              fullWidth
+              type="number"
+              label="Price $"
+              value={priceValue}
+              onChange={(e) => setPriceValue(parseInt(e.target.value) || 1)}
+            />
+          </Grid>
+          <Grid item xs={12} md={4}>
+            <div className={styles.right}>
+          <button  onClick={handleSearchClick}>
             <span>Search</span>
           </button>
-        </div>
-      </div>
-    </div>
+          </div>
+          </Grid>
+        </Grid>
+      </Paper>
+    </Box>
   );
 }

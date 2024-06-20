@@ -22,6 +22,8 @@ const AccountSettings = () => {
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [snackbarSeverity, setSnackbarSeverity] = useState<'success' | 'error'>('success');
   const [openDialog, setOpenDialog] = useState(false);
+  const [openChangePasswordModal, setOpenChangePasswordModal] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
 
   useEffect(() => {
     if (user) {
@@ -120,6 +122,37 @@ const AccountSettings = () => {
     setOpenSnackbar(false);
   };
 
+  const handleChangePassword = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await fetch('https://phbackend-m3r9.onrender.com/users/change-password', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`, 
+        },
+        body: JSON.stringify({ "password": newPassword }),
+      });
+
+      if (response.ok) {
+        setSnackbarMessage('Password changed successfully!');
+        setSnackbarSeverity('success');
+        setOpenSnackbar(true);
+        setOpenChangePasswordModal(false);
+        setNewPassword('');
+      } else {
+        setSnackbarMessage('Failed to change password.');
+        setSnackbarSeverity('error');
+        setOpenSnackbar(true);
+      }
+    } catch (error) {
+      console.error('Error changing password:', error);
+      setSnackbarMessage('An error occurred. Please try again.');
+      setSnackbarSeverity('error');
+      setOpenSnackbar(true);
+    }
+  };
+
   return (
     <div className={styles.container}>
       <STopBar />
@@ -192,12 +225,15 @@ const AccountSettings = () => {
           />
         </Box>
         <div className={styles.buttons}>
-        <Button type="submit" onClick={handleSubmit} variant="contained" color="primary">
-          Save Changes
-        </Button>
-        <Button onClick={handleOpenDialog} variant="contained" color="error">
-          Delete Account
-        </Button>
+          <Button type="submit" onClick={handleSubmit} variant="contained" color="primary">
+            Save Changes
+          </Button>
+          <Button onClick={() => setOpenChangePasswordModal(true)} variant="contained" color="primary">
+            Change Password
+          </Button>
+          <Button onClick={handleOpenDialog} variant="contained" color="error">
+            Delete Account
+          </Button>
         </div>
       </div>
       <div className={styles.footer}>
@@ -228,6 +264,32 @@ const AccountSettings = () => {
           </Button>
           <Button onClick={handleDeleteUser} color="error">
             Delete
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={openChangePasswordModal}
+        onClose={() => setOpenChangePasswordModal(false)}
+      
+      >
+        <DialogTitle>{"Change Password"}</DialogTitle>
+        <DialogContent>
+          <TextField
+            label="New Password"
+            type="password"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            fullWidth
+            variant="outlined"
+            margin="normal"
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenChangePasswordModal(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleChangePassword} color="primary">
+            Change Password
           </Button>
         </DialogActions>
       </Dialog>

@@ -1,0 +1,31 @@
+.container{
+    display: flex;
+    flex-direction: column;
+    .top{
+        display: flex;
+        flex-direction: row;
+    }
+    .bottom{
+        display: flex;
+        flex-direction: row;
+        .content{
+            flex:3;
+            display: flex;
+            flex-direction: row;
+            
+        }
+        .right{
+            flex:1;
+            display: flex;
+            flex-direction: column;
+            .comment{
+                flex: 1;
+            }
+            .reserv{
+                flex:1;
+            
+            }
+        }
+    }
+    
+}

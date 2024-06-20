@@ -4,21 +4,8 @@ import STopBar from '@/components/signed-in-compenents/s-top-bar/s-top-bar';
 import { Footer } from '@/components/footer/footer';
 import styles from './review-comments.module.scss';
 import CommentCard from '@/components/comment/comment';
+import {Comment} from '../../components/comment/comment';
 
-interface Comment {
-  value: string;
-  hygiene_star: number;
-  safety_star: number;
-  transportation_star: number;
-  likes: number;
-  user: {
-    _id: string;
-    first_name: string;
-    last_name: string;
-    userType: string;
-  };
-  hotel_id: string;
-}
 
 const UserComments = () => {
   const { user } = useAuth();
@@ -43,6 +30,8 @@ const UserComments = () => {
         if (response.ok) {
           const data = await response.json();
           setUserComment(data.comments);
+          
+        console.log("hotelname",data);
         } else {
           setError('Failed to fetch comments.');
         }
