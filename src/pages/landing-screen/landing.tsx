@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // useHistory yerine useNavigate kullanalım
+import { useNavigate } from 'react-router-dom';
 import styles from './landing.module.scss';
 import { TopBar } from '../../components/top-bar/top-bar';
+import {STopBar} from '../../components/signed-in-compenents/s-top-bar/s-top-bar';
 import { SearchBar } from '../../components/search-bar/search-bar';
 import SlideHotels from '../../components/slide-hotels/slide-hotels';
 import { Footer } from '../../components/footer/footer';
-import {Hotel} from '../../components/hotel-card/hotel-card';
-
-
+import { Hotel } from '../../components/hotel-card/hotel-card';
 
 const Landing: React.FC = () => {
   const [top_hotels, setTopHotels] = useState<Hotel[]>([]);
@@ -16,7 +15,8 @@ const Landing: React.FC = () => {
   const [reachable_hotels, setReachableHotels] = useState<Hotel[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const navigate = useNavigate(); 
+  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(false); // Kullanıcı oturum durumu
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchHotels = async () => {
@@ -29,33 +29,33 @@ const Landing: React.FC = () => {
         console.log('Fetched hotels:', data);
 
         const fetchedHotels: Hotel[] = data.map((hotel: any) => ({
+          _id: hotel._id,
           name: hotel.hotel_name,
-          image: hotel.image || 'default.jpg',
+          image: hotel.image || 'D:/phFrontend/src/assets/images/hotel.png',
           description: hotel.hotel_desc,
           average_stars: hotel.average_star || 0,
           hygiene_star: hotel.hygiene_star,
           safety_star: hotel.safety_star,
           transportation_star: hotel.transportation_star,
           city: hotel.city,
-          country: hotel.country
+          country: hotel.country,
         }));
 
         const top_hotels = fetchedHotels
           .sort((a: Hotel, b: Hotel) => b.average_stars - a.average_stars)
           .slice(0, 8);
-        console.log('Top hotels:', top_hotels);
+
         const safety_hotels = fetchedHotels
           .sort((a: Hotel, b: Hotel) => b.average_stars - a.average_stars)
           .slice(0, 8);
-        console.log('Top safety hotels:', safety_hotels);
+
         const hygienic_hotels = fetchedHotels
           .sort((a: Hotel, b: Hotel) => b.average_stars - a.average_stars)
           .slice(0, 8);
-        console.log('Top hygenic hotels:', hygienic_hotels);
+
         const reachable_hotels = fetchedHotels
           .sort((a: Hotel, b: Hotel) => b.average_stars - a.average_stars)
           .slice(0, 8);
-        console.log('Top reachable hotels:', reachable_hotels);
 
         setTopHotels(top_hotels);
         setSafetyHotels(safety_hotels);
@@ -73,12 +73,25 @@ const Landing: React.FC = () => {
       }
     };
 
+    // Kullanıcı oturum durumunu kontrol edin
+    const checkLoginStatus = () => {
+      // Bu örnek için localStorage kullanıyoruz, farklı bir oturum yönetim yöntemi kullanabilirsiniz
+      const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      setIsLoggedIn(loggedIn);
+      console.log('logged in: ',loggedIn);
+    };
+
     fetchHotels();
+    checkLoginStatus();
+    console.log('check status: ',checkLoginStatus);
+    
   }, []);
 
-  const handleSearch = (criteria: { city: string; checkInDate: string; checkOutDate: string; personCount: number }) => {
+  const handleSearch = (criteria: { city: string; checkInDate: string; checkOutDate: string; personCount: number; price: number }) => {
+    // Arama kriterlerini localStorage'a kaydediyoruz
     localStorage.setItem('searchCriteria', JSON.stringify(criteria));
-    navigate(`/filtration?location=${encodeURIComponent(criteria.city)}&checkInDate=${criteria.checkInDate}&checkOutDate=${criteria.checkOutDate}&people=${criteria.personCount}`);
+    // Filtration sayfasına yönlendiriyoruz
+    navigate(`/filtration?city=${encodeURIComponent(criteria.city)}&checkInDate=${criteria.checkInDate}&checkOutDate=${criteria.checkOutDate}&personCount=${criteria.personCount}&price=${criteria.price}`);
   };
 
   if (loading) {
@@ -92,7 +105,7 @@ const Landing: React.FC = () => {
   return (
     <div className={styles.container}>
       <div className={styles.top}>
-        <TopBar />
+        {isLoggedIn ? <STopBar /> : <TopBar />}
       </div>
       <div className={styles.content}>
         <SearchBar onSearch={handleSearch} />

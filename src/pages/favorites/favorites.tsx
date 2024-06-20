@@ -49,7 +49,7 @@ const FavoriteHotels: React.FC = () => {
         const fetchedHotels: Hotel[] = filteredHotels.map((hotel: any) => ({
           id: hotel._id,
           name: hotel.hotel_name,
-          image: hotel.image?.name || 'default.jpg',
+          image: hotel.image || 'default.jpg',
           description: hotel.hotel_desc,
           average_stars: hotel.average_star || 0,
         }));

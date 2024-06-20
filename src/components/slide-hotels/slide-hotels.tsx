@@ -7,11 +7,11 @@ import KeyboardArrowLeft from '@mui/icons-material/KeyboardArrowLeft';
 import KeyboardArrowRight from '@mui/icons-material/KeyboardArrowRight';
 import SwipeableViews from 'react-swipeable-views';
 import { autoPlay } from 'react-swipeable-views-utils';
+import { useNavigate } from 'react-router-dom';
 import HotelCard from "../hotel-card/hotel-card";
 import styles from './slide-hotel.module.scss';
-import {Hotel} from '../hotel-card/hotel-card';
+import { Hotel } from '../hotel-card/hotel-card';
 const AutoPlaySwipeableViews = autoPlay(SwipeableViews);
-
 
 interface SlideHotelsProps {
   hotels: Hotel[];
@@ -22,6 +22,7 @@ const SlideHotels: React.FC<SlideHotelsProps> = ({ hotels = [] }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [autoPlay, setAutoPlay] = useState(true);
   const maxSteps = Math.ceil(hotels.length / 4);
+  const navigate = useNavigate();
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1);
@@ -43,6 +44,12 @@ const SlideHotels: React.FC<SlideHotelsProps> = ({ hotels = [] }) => {
     setAutoPlay(true);
   };
 
+  const handleHotelClick = (_id: string) => {
+    navigate(`/hotel/${_id}`);
+    console.log("id",_id);
+    
+  };
+
   return (
     <Box sx={{ width: '100%', flexGrow: 1, flexDirection: 'column' }} onMouseEnter={handleMouseEnter} onMouseLeave={handleMouseLeave}>
       <AutoPlaySwipeableViews
@@ -58,6 +65,7 @@ const SlideHotels: React.FC<SlideHotelsProps> = ({ hotels = [] }) => {
             {hotels.slice(index * 4, (index + 1) * 4).map((hotel, hotelIndex) => (
               <div key={`hotel-${index}-${hotelIndex}`} className={styles.hotelCard}>
                 <HotelCard
+                  _id={hotel._id}
                   name={hotel.name}
                   image={hotel.image}
                   description={hotel.description}
@@ -67,6 +75,7 @@ const SlideHotels: React.FC<SlideHotelsProps> = ({ hotels = [] }) => {
                   transportation_star={hotel.transportation_star}
                   city={hotel.city}
                   country={hotel.country}
+                  onClick={handleHotelClick}
                 />
               </div>
             ))}
@@ -77,7 +86,7 @@ const SlideHotels: React.FC<SlideHotelsProps> = ({ hotels = [] }) => {
         steps={maxSteps}
         position="static"
         activeStep={activeStep}
-        sx={{display:"flex", justifyItems:"center",}}
+        sx={{ display: "flex", justifyItems: "center", }}
         nextButton={
           <Button size="small" onClick={handleNext} disabled={activeStep === maxSteps - 1}>
             Next

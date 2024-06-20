@@ -3,7 +3,7 @@
     align-items: center;
     border-radius: 10px;
     max-width:70vi;
-    background-color: #c5c5c556;
+    background-color: #ffffff;
     border: 0px ;
     box-shadow: rgba(19, 147, 233, 0.788) 0 15px 30px -5px;
     .content{
@@ -12,16 +12,7 @@
         align-items: center;
         margin: 10px 10px;
         gap: 20px;
-        .left{
-            flex: 1;
-            border-radius: 15px;
-        }
-        .mid{
-            flex: 1;
-        }
-        .right{
-            flex: 1;
-            display:contents;
+        
             button {
                 align-items: center;
                 background-image: linear-gradient(144deg, #AF40FF, #5B42F3 50%, #00DDEB);
@@ -63,6 +54,6 @@
                 }
               }
               
-        }
+        
     }
 }

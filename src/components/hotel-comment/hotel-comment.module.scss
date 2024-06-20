@@ -1,0 +1,15 @@
+.commentSection{
+    gap: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content:space-evenly;
+    .commentList{
+        display:flex;
+        flex-direction: column;
+        gap: 50px;
+        justify-content: center;
+    }
+    .commentForm{
+
+    }
+}

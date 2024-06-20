@@ -32,16 +32,17 @@ const FavoriteHotelCard: React.FC<HotelCardProps> = ({ id, name, image, descript
   return (
     <div className={styles.container}>
       <div className={styles.cardClass}>
-        <img className={styles.media} src={"https://phbackend-m3r9.onrender.com/uploads/"+image} alt={name} />
+        <img className={styles.media} src={image[0]} alt={name} />
         <div className={styles.content}>
           <h3>{name}</h3>
           <p>{description}</p>
         </div>
         <div className={styles.actions}>
-          <div>{renderStars(Math.round(average_stars))}</div>
-          <button className={styles.favoriteButton} onClick={handleRemoveFavorite}>
-          <FavoriteIcon style={{ color: 'red' }} />
-            </button>
+          {renderStars(Math.round(average_stars))}
+            <button className={styles.favoriteButton} onClick={handleRemoveFavorite}>
+            <FavoriteIcon style={{ color: 'red' }} />
+              </button>
+          
         </div>
         
       </div>

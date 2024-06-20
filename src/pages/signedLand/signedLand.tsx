@@ -28,6 +28,7 @@ const SignedLand: React.FC = () => {
         console.log('Fetched hotels:', data);
 
         const fetchedHotels: Hotel[] = data.map((hotel: any) => ({
+          _id: hotel._id,
           name: hotel.hotel_name,
           image: hotel.image || 'default.jpg',
           description: hotel.hotel_desc,
@@ -42,19 +43,19 @@ const SignedLand: React.FC = () => {
         const top_hotels = fetchedHotels
           .sort((a: Hotel, b: Hotel) => b.average_stars - a.average_stars)
           .slice(0, 8);
-        console.log('Top hotels:', top_hotels);
+
         const safety_hotels = fetchedHotels
           .sort((a: Hotel, b: Hotel) => b.average_stars - a.average_stars)
           .slice(0, 8);
-        console.log('Top safety hotels:', safety_hotels);
+
         const hygienic_hotels = fetchedHotels
           .sort((a: Hotel, b: Hotel) => b.average_stars - a.average_stars)
           .slice(0, 8);
-        console.log('Top hygenic hotels:', hygienic_hotels);
+
         const reachable_hotels = fetchedHotels
           .sort((a: Hotel, b: Hotel) => b.average_stars - a.average_stars)
           .slice(0, 8);
-        console.log('Top reachable hotels:', reachable_hotels);
+        //console.log('Top reachable hotels:', reachable_hotels);
 
         setTopHotels(top_hotels);
         setSafetyHotels(safety_hotels);
