@@ -83,11 +83,12 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
         const loginData = await response.json();
         const token = loginData.tokens.acces_token;
   
-        console.log('Login successful, token:', token);
-        console.log('Login response:', loginData);
+        // console.log('Login successful, token:', token);
+        // console.log('Login response:', loginData);
         localStorage.setItem('token', token);
         localStorage.setItem('user', JSON.stringify(loginData));
-        console.log('localStorage token:', localStorage.getItem('token'));
+        localStorage.setItem('isLoggedIn', 'true');
+        // console.log('localStorage token:', localStorage.getItem('token'));
         setUser(loginData);
         navigate('/signedLand');
       } else {
@@ -103,9 +104,11 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     setUser(null);
     localStorage.removeItem('token');
     localStorage.removeItem('user');
-    localStorage.clear;
-    navigate('/');
+    localStorage.removeItem('isLoggedIn');
+    localStorage.clear(); 
+    navigate('/'); 
   };
+  
 
   return (
     <AuthContext.Provider value={{ user, loading, login, logout }}>

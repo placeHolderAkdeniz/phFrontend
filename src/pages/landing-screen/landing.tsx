@@ -26,7 +26,7 @@ const Landing: React.FC = () => {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
         const data: any[] = await response.json();
-        console.log('Fetched hotels:', data);
+        // console.log('Fetched hotels:', data);
 
         const fetchedHotels: Hotel[] = data.map((hotel: any) => ({
           _id: hotel._id,
@@ -75,8 +75,9 @@ const Landing: React.FC = () => {
 
     // Kullanıcı oturum durumunu kontrol edin
     const checkLoginStatus = () => {
-      // Bu örnek için localStorage kullanıyoruz, farklı bir oturum yönetim yöntemi kullanabilirsiniz
       const loggedIn = localStorage.getItem('isLoggedIn') === 'true';
+      console.log('local',localStorage.getItem('isLoggedIn'));
+      
       setIsLoggedIn(loggedIn);
       console.log('logged in: ',loggedIn);
     };
