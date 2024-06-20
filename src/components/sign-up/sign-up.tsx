@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Box, Typography, TextField, Button, Snackbar, Alert } from '@mui/material';
 import Modal from '@mui/material/Modal';
 import axios from 'axios';
+import styles from './sign-up.module.scss';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -119,14 +120,10 @@ export function SignUpModal() {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
           </Box>
-          <Button 
-            variant="contained" 
-            color="primary" 
-            onClick={handleSignUp} 
-            sx={{ backgroundImage: 'linear-gradient(144deg, #AF40FF, #5B42F3 50%, #00DDEB)', color: 'white' }}
-          >
-            Sign Up
-          </Button>
+          <div className={styles.bottom}>
+          <button onClick={handleSignUp}> Sign Up</button>
+          </div>
+          
         </Box>
       </Modal>
       <Snackbar 

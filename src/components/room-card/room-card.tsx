@@ -3,14 +3,20 @@ import styles from './room-card.module.scss';
 
 export interface Rooms {
   _id: string;
+  title: string;
+  price: number;
+  adult: number;
+  child: number;
+  totalCapacity: number;
+  doubleBed: number;
+  singleBed: number;
+  features: string[];
+  image: string[];
   hotel: {
     _id: string;
     hotel_name: string;
     city: string;
   };
-  image: string[];
-  price: number;
-  capacity: number;
   createdAt: string;
   updatedAt: string;
 }
@@ -26,9 +32,22 @@ const RoomCard: React.FC<RoomCardProps> = ({ room }) => {
         <img className={styles.media} src={room.image[0]} alt={room.hotel.hotel_name} />
         <div className={styles.content}>
           <h3>{room.hotel.hotel_name}</h3>
+          <p>Title: {room.title}</p>
           <p>City: {room.hotel.city}</p>
           <p>Price: ${room.price}</p>
-          <p>Capacity: {room.capacity} person(s)</p>
+          <p>Adult: {room.adult}</p>
+          <p>Child: {room.child}</p>
+          <p>DoubleBed: {room.doubleBed}</p>
+          <p>SingleBed: {room.singleBed}</p>
+          <p>Capacity: {room.totalCapacity} person(s)</p>
+          <div>
+            <h4>Features:</h4>
+            <ul>
+              {room.features.map((feature, index) => (
+                <li key={index}>{feature}</li>
+              ))}
+            </ul>
+          </div>
         </div>
       </div>
     </div>

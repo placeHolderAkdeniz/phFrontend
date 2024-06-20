@@ -11,9 +11,16 @@
         justify-content:start;
     }
     button{
+        background-color: white;
+        color: #3acbe1;
         border-radius: 15px;
         width: 100px;
-        
+        &:active,
+            &:hover {
+              outline: 0;
+              background-color: white;
+              transform: scale(1.1);
+            }
     }
     .links{
         display: flex;

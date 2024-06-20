@@ -12,6 +12,7 @@ import Preview from '@/components/preview/preview';
 import axios from 'axios';
 import { Hotel } from '../../components/hotel-card/hotel-card';
 import HotelComment from '@/components/hotel-comment/hotel-comment';
+import  RoomCard  from '../../components/room-card/room-card';
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -126,7 +127,6 @@ export default function HotelPage() {
           <CustomTabPanel value={value} index={1}>
             <HotelComment/>
           </CustomTabPanel>
-          
         </Box>
       </div>
       <Footer />
