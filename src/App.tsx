@@ -12,6 +12,8 @@ import Logout from './pages/logout/logout';
 import HotelPage from './pages/hotel-page/hotel-page';
 import Filtration from './pages/filtration/filtration';
 import AdminPanel from './pages/admin-panel/admin-panel';
+import NewRoom from './pages/admin-panel/new-room/new-room';
+import NewHotel from './pages/admin-panel/new-hotel/new-hotel';
 
 interface PrivateRouteProps {
   component: React.ComponentType;
@@ -51,6 +53,8 @@ function App() {
             <Route path="/filtration" element={<Filtration />} />
             <Route path="/logout" element={<Logout />} />
             <Route path="/admin-panel" element={<PrivateRoute component={AdminPanel} adminOnly />} />
+            <Route path="/new-rooms" element={<PrivateRoute component={NewRoom} adminOnly />} />
+            <Route path="/new-hotels" element={<PrivateRoute component={NewHotel} adminOnly />} />
           </Routes>
         </AuthProvider>
       </Router>
