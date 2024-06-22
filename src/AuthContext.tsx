@@ -71,7 +71,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
   const login = async (credentials: { email: string; password: string }) => {
     console.log('Attempting login...');
     try {
-      const response = await fetch('https://phbackend-m3r9.onrender.com/users/login', {
+      const response = await fetch('https://phbackend-9rp2.onrender.com/users/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

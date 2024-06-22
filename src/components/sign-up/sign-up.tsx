@@ -36,7 +36,7 @@ export function SignUpModal() {
     }
 
     try {
-      const response = await axios.post('https://phbackend-m3r9.onrender.com/users', {
+      const response = await axios.post('https://phbackend-9rp2.onrender.com/users', {
         email: email,
         password: password
       });

@@ -52,7 +52,7 @@ const AccountSettings = () => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('https://phbackend-m3r9.onrender.com/users', {
+      const response = await fetch('https://phbackend-9rp2.onrender.com/users', {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -82,7 +82,7 @@ const AccountSettings = () => {
   const handleDeleteUser = async () => {
     const token = localStorage.getItem('token');
     try {
-      const response = await fetch('https://phbackend-m3r9.onrender.com/users', {
+      const response = await fetch('https://phbackend-9rp2.onrender.com/users', {
         method: 'DELETE',
         headers: {
           Authorization: `Bearer ${token}`, 
@@ -125,7 +125,7 @@ const AccountSettings = () => {
   const handleChangePassword = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await fetch('https://phbackend-m3r9.onrender.com/users/change-password', {
+      const response = await fetch('https://phbackend-9rp2.onrender.com/users/change-password', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

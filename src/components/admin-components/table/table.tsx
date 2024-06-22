@@ -23,9 +23,9 @@ interface CommentRow {
 }
 
 const List: React.FC = () => {
-  const { data: myHotelData } = useFetch("https://phbackend-m3r9.onrender.com/users/my-hotel");
+  const { data: myHotelData } = useFetch("https://phbackend-9rp2.onrender.com/users/my-hotel");
   const hotelId = myHotelData && myHotelData.length > 0 ? myHotelData[0]._id : null;
-  const { data: commentsData } = useFetch(hotelId ? `https://phbackend-m3r9.onrender.com/hotels/comments?hotelId=${hotelId}` : null);
+  const { data: commentsData } = useFetch(hotelId ? `https://phbackend-9rp2.onrender.com/hotels/comments?hotelId=${hotelId}` : null);
 
   const rows: CommentRow[] = commentsData && commentsData.comments ? commentsData.comments.slice(0, 5) : [];
 

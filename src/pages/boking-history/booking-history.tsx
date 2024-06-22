@@ -23,7 +23,7 @@ const BookingHistory = () => {
   useEffect(() => {
     const fetchBookings = async () => {
       try {
-        const response = await axios.get('https://phbackend-m3r9.onrender.com/users/my-bookings', {
+        const response = await axios.get('https://phbackend-9rp2.onrender.com/users/my-bookings', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }

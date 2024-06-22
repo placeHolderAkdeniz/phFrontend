@@ -62,7 +62,7 @@ export default function HotelPage() {
 
     const fetchHotel = async () => {
       try {
-        const response = await axios.get(`https://phbackend-m3r9.onrender.com/hotels?_id=${_id}`, {
+        const response = await axios.get(`https://phbackend-9rp2.onrender.com/hotels?_id=${_id}`, {
           headers: {
             'Content-Type': 'application/json',
           },

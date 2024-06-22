@@ -23,7 +23,7 @@ const HotelComment: React.FC = () => {
     const fetchComments = async () => {
       console.log(_id+"dsfsdfs");
       try {
-        const response = await axios.get(`https://phbackend-m3r9.onrender.com/hotels/comments?hotelId=${_id}`);
+        const response = await axios.get(`https://phbackend-9rp2.onrender.com/hotels/comments?hotelId=${_id}`);
         if (response.status !== 200) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -60,7 +60,7 @@ const HotelComment: React.FC = () => {
     try {
       
       
-      const response = await axios.post(`https://phbackend-m3r9.onrender.com/comments?hotelId=${_id}`, {
+      const response = await axios.post(`https://phbackend-9rp2.onrender.com/comments?hotelId=${_id}`, {
         value: newComment,
         transportation_star: transportationStar,
         safety_star: safetyStar,
@@ -150,6 +150,7 @@ const HotelComment: React.FC = () => {
             Submit
           </Button>
         </Box>
+        
       )}
       {!hasToken && <Typography>You need to log in to post a comment.</Typography>}
     </Box>
