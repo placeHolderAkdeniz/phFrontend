@@ -8,7 +8,7 @@ import ApartmentOutlinedIcon from '@mui/icons-material/ApartmentOutlined';
 
 const Navbar: React.FC = () => {
   const { user } = useAuth();
-  const { data: myHotelData } = useFetch("https://phbackend-m3r9.onrender.com/users/my-hotel");
+  const { data: myHotelData } = useFetch("https://phbackend-9rp2.onrender.com/users/my-hotel");
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
 

@@ -33,7 +33,7 @@ const Preview: React.FC<PreviewProps> = ({ hotel }) => {
     try {
       const token = localStorage.getItem('token');
       const hotelId = localStorage.getItem('hotelId');
-      const response = await fetch('https://phbackend-m3r9.onrender.com/bookings', {
+      const response = await fetch('https://phbackend-9rp2.onrender.com/bookings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -133,15 +133,7 @@ const Preview: React.FC<PreviewProps> = ({ hotel }) => {
                 onChange={(e) => setPersonCount(Number(e.target.value))}
               />
             </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Price"
-                value={price}
-                onChange={(e) => setPrice(Number(e.target.value))}
-              />
-            </Grid>
+            
             <Grid item xs={12}>
               <Button
                 fullWidth

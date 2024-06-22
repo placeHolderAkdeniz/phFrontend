@@ -5,44 +5,60 @@ $gap: 30px;
   flex-direction: column;
   gap: $gap;
 
-  .top {
-    // Add your styles for the top bar if any
-  }
-
   .content {
     display: flex;
-    flex-direction: column; 
-    margin-left: 30px;
-    margin-right: 30px;
-    width: 100%;  
+    flex-direction: column;
+    align-self: center;
+    width: 60vw; 
     background-color: rgba(2, 207, 207, 0.342);
     padding: 20px; 
     border-radius: 10px; 
     .main{
       display: flex;
       flex-direction: row;
+      justify-content: space-between;
       gap: $gap;
+      
       .filters {
         flex:1;
         background-color: white;
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
     
         .slider {
-          margin-bottom: 20px;
+          margin-bottom: 10px;
         }
     
         .features {
           display: flex;
           flex-direction: column;
+          h4{
+            
+          }
+        }
+        button{
+          background-color: rgb(38, 118, 209);
+            color: white;
+            border-radius: 15px;
+            width: 100px;
+            &:active,
+                &:hover {
+                  outline: 0;
+                  background-color: rgb(38, 118, 209);
+                  transform: scale(1.1);
+                }
         }
       }
     
       .results {
-        flex:8;
+        flex:4;
         display: flex;
         flex-direction: column;
+        align-items: center;
         gap: $gap;
       }
     }

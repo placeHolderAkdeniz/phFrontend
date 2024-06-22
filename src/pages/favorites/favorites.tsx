@@ -38,7 +38,7 @@ const FavoriteHotels: React.FC = () => {
           return;
         }
 
-        const response = await fetch('https://phbackend-m3r9.onrender.com/hotels');
+        const response = await fetch('https://phbackend-9rp2.onrender.com/hotels');
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
         }
@@ -84,7 +84,7 @@ const FavoriteHotels: React.FC = () => {
       setFavoriteHotels(favoriteHotels.filter(hotel => hotel.id !== hotelId));
 
       // İsteğe bağlı: Sunucuya favori güncellemesini bildirme
-      await fetch(`https://phbackend-m3r9.onrender.com/users/favorites`, {
+      await fetch(`https://phbackend-9rp2.onrender.com/users/favorites`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',

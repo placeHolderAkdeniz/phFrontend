@@ -27,7 +27,7 @@ const NewRoom: React.FC = () => {
   const [hotelId, setHotelId] = useState<string | undefined>(undefined);
   const [rooms, setRooms] = useState<string>("");
 
-  const { data: myHotelData } = useFetch("https://phbackend-m3r9.onrender.com/users/my-hotel");
+  const { data: myHotelData } = useFetch("https://phbackend-9rp2.onrender.com/users/my-hotel");
 
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -46,7 +46,7 @@ const NewRoom: React.FC = () => {
 
     try {
       await axios.post(
-        "https://phbackend-m3r9.onrender.com/rooms",
+        "https://phbackend-9rp2.onrender.com/rooms",
         requestBody,
         {
           headers: {

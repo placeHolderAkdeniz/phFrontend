@@ -24,7 +24,7 @@ export function SearchBar({ onSearch }: SearchBarProps) {
   useEffect(() => {
     const fetchLocations = async () => {
       try {
-        const response = await fetch('https://phbackend-m3r9.onrender.com/hotels');
+        const response = await fetch('https://phbackend-9rp2.onrender.com/hotels');
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data: any[] = await response.json();
 

@@ -19,7 +19,7 @@ const UserComments = () => {
     const fetchComments = async () => {
       try {
         const token = localStorage.getItem('token');
-        const response = await fetch('https://phbackend-m3r9.onrender.com/users/comments', {
+        const response = await fetch('https://phbackend-9rp2.onrender.com/users/comments', {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
