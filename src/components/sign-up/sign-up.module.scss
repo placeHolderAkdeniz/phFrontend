@@ -1,21 +1,53 @@
-.bottom{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 400px;
-    gap: 10px;
+// sign-up.module.scss
 
-    button{
-        background-color: white;
-        color: #3acbe1;
-        border-radius: 15px;
-        width: 100px;
-        &:active,
-            &:hover {
-              outline: 0;
-              background-color: white;
-              transform: scale(1.1);
-            }
+.bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  gap: 10px;
+
+  button {
+    background-color: white;
+    color: #3acbe1;
+    border-radius: 15px;
+    width: 150px;
+    padding: 10px;
+    &:active,
+    &:hover {
+      outline: 0;
+      background-color: white;
+      transform: scale(1.1);
     }
-    
+  }
+}
+
+.formControl {
+  width: 100%;
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: space-between;
+  .admin{
+    display: flex;
+    flex-direction: row;
+    align-items: self-end;
+  }
+}
+
+.modalContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 500px;
+  height: auto;
+  padding: 40px;
+  background-color: #3acbe1;
+  border-radius: 10px;
+  box-shadow: rgba(19, 147, 233, 0.788) 0 15px 30px -5px;
+}
+
+.infoIcon {
+  margin-left: 10px;
+  cursor: pointer;
 }

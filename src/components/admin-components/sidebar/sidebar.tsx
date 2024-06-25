@@ -1,11 +1,11 @@
 import "./sidebar.scss";
 import DashboardIcon from "@mui/icons-material/Dashboard";
-import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import CreditCardIcon from "@mui/icons-material/CreditCard";
 import StoreIcon from "@mui/icons-material/Store";
 import ExitToAppIcon from "@mui/icons-material/ExitToApp";
 import NotificationsNoneIcon from "@mui/icons-material/NotificationsNone";
 import AccountCircleOutlinedIcon from "@mui/icons-material/AccountCircleOutlined";
+import ChangeCircleOutlinedIcon from '@mui/icons-material/ChangeCircleOutlined';
 import { Link } from "react-router-dom";
 import { useAuth } from "@/AuthContext";
 import { useState } from "react";
@@ -52,15 +52,18 @@ const Sidebar: React.FC = () => {
             </li>
           </Link>
           
-          <p className="title">REZERVATIONS</p>
-          <li>
-            <NotificationsNoneIcon className="icon" />
-            <span>Rezervations</span>
-          </li>
-          <Link to="/comments" style={{ textDecoration: "none" }}>
+          <p className="title">HOTEL</p>
+          <Link to="/rezervations" style={{ textDecoration: "none" }}>
             <li>
-              <CommentOutlinedIcon className="icon" />
-              <span>Comments</span>
+              <NotificationsNoneIcon className="icon" />
+              <span>Rezervations</span>
+            </li>
+          </Link>
+          
+          <Link to="/update-hotel" style={{ textDecoration: "none" }}>
+            <li>
+              <ChangeCircleOutlinedIcon className="icon" />
+              <span>Update Hotel</span>
             </li>
           </Link>
           

@@ -1,10 +1,11 @@
+// new-room.tsx
 import "./new-room.scss";
 import Sidebar from "../../../components/admin-components/sidebar/sidebar";
 import Navbar from "../../../components/admin-components/navbar/navbar";
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
-import useFetch from "@/hooks/useFetch";
 import axios from "axios";
 
+// Room input fields
 interface RoomInput {
   id: string;
   label: string;
@@ -15,34 +16,77 @@ interface RoomInput {
 const roomInputs: RoomInput[] = [
   { id: "title", label: "Title", type: "text", placeholder: "2 bed room" },
   { id: "price", label: "Price", type: "number", placeholder: "100" },
-  { id: "adult", label: "Adult", type: "number", placeholder: "Number of Adult" },
-  { id: "child", label: "Child", type: "number", placeholder: "Number of Child" },
-  { id: "doubleBed", label: "Double Bed", type: "number", placeholder: "Number of Double Bed" },
-  { id: "singleBed", label: "Single Bed", type: "number", placeholder: "Number of Single Bed" },
-  { id: "features", label: "Features", type: "text", placeholder: "Type feature of room" },
+  { id: "adult", label: "Adult", type: "number", placeholder: "Number of Adults" },
+  { id: "child", label: "Child", type: "number", placeholder: "Number of Children" },
+  { id: "doubleBed", label: "Double Bed", type: "number", placeholder: "Number of Double Beds" },
+  { id: "singleBed", label: "Single Bed", type: "number", placeholder: "Number of Single Beds" },
+];
+
+const featureOptions = [
+  "wifi",
+  "pool",
+  "gym",
+  "Mini Fridge",
+  "Jacuzzi",
+  "Balcony",
+  "Room Service",
+  "Mini Bar",
+  "Parent Bathroom",
+  "Terrace",
+  "Bathroom with Bathtub",
+  "Garden View",
 ];
 
 const NewRoom: React.FC = () => {
+  // State management
   const [info, setInfo] = useState<Record<string, any>>({});
-  const [hotelId, setHotelId] = useState<string | undefined>(undefined);
-  const [rooms, setRooms] = useState<string>("");
+  const [hotel, setHotelId] = useState<string | undefined>(undefined);
 
-  const { data: myHotelData } = useFetch("https://phbackend-9rp2.onrender.com/users/my-hotel");
+  // Fetch hotel data from local storage
+  const [myHotelData, setMyHotelData] = useState<any[]>([]);
+  useEffect(() => {
+    const storedHotelData = localStorage.getItem('myHotel');
+    if (storedHotelData) {
+      setMyHotelData(JSON.parse(storedHotelData));
+    }
+  }, []);
 
-
+  // Handle input change for room details
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setInfo((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
+  // Handle feature selection change
+  const handleFeatureChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedFeatures = Array.from(e.target.selectedOptions, option => option.value);
+    setInfo((prev) => ({ ...prev, features: selectedFeatures }));
+  };
+
+  // Handle hotel selection change
+  const handleHotelChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedHotelId = e.target.value;
+    setHotelId(selectedHotelId);
+    console.log("Selected Hotel ID:", selectedHotelId); // Seçilen otelin ID'sini konsola yazdır
+  };
+
+  // Handle form submission
   const handleClick = async (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
+
+    // Token'i local storage'dan al
     const token = localStorage.getItem("token");
-    const features = info.features.split(",").map((feature: string) => feature.trim());
-    const requestBody = {
+
+    // Özellikleri ekle veya boş array olarak ayarla
+    const features = info.features || [];
+
+    // Gönderilecek verileri JSON olarak oluştur
+    const requestBody = JSON.stringify({
       ...info,
-      hotelId,
+      hotel,
       features
-    };
+    });
+
+    console.log("Request Body:", requestBody);
 
     try {
       await axios.post(
@@ -51,7 +95,7 @@ const NewRoom: React.FC = () => {
         {
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            Authorization: `Bearer ${token}`, // Token'i Authorization başlığına ekle
           },
         }
       );
@@ -76,25 +120,42 @@ const NewRoom: React.FC = () => {
               {roomInputs.map((input) => (
                 <div className="formInput" key={input.id}>
                   <label>{input.label}</label>
-                  <input id={input.id} type={input.type} placeholder={input.placeholder} onChange={handleChange} />
+                  <input
+                    id={input.id}
+                    type={input.type}
+                    placeholder={input.placeholder}
+                    onChange={handleChange}
+                  />
                 </div>
               ))}
               <div className="formInput">
-                <label>Rooms</label>
-                <textarea onChange={(e) => setRooms(e.target.value)} placeholder="Give comma between room numbers." />
-              </div>
-              <div className="formInput">
                 <label>Choose a hotel</label>
-                <select id="hotelId" value={hotelId} onChange={(e) => setHotelId(e.target.value)}>
+                <select
+                  id="hotel"
+                  value={hotel || ""} // State boşsa boş string kullanılıyor
+                  onChange={handleHotelChange} // Hotel değişikliği yönetiliyor
+                >
                   {myHotelData.length > 0 ? (
-                    <option key={myHotelData[0]._id} value={myHotelData[0]._id}>{myHotelData[0].hotel_name}</option>
+                    myHotelData.map((hotel) => (
+                      <option key={hotel._id} value={hotel._id}>
+                        {hotel.hotel_name} ({hotel._id})
+                      </option>
+                    ))
                   ) : (
                     <option>No hotels available</option>
                   )}
                 </select>
               </div>
-              <button onClick={handleClick}>Send</button>
+              <div className="formInput">
+                <label>Choose Features</label>
+                <select multiple onChange={handleFeatureChange}>
+                  {featureOptions.map((option) => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+              </div>
             </form>
+            <button onClick={handleClick}>Send</button>
           </div>
         </div>
       </div>
