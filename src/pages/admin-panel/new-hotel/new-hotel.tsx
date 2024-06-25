@@ -2,7 +2,7 @@ import "./new-hotel.scss";
 import Sidebar from "../../../components/admin-components/sidebar/sidebar";
 import Navbar from "../../../components/admin-components/navbar/navbar";
 import DriveFolderUploadOutlinedIcon from "@mui/icons-material/DriveFolderUploadOutlined";
-import { useState, ChangeEvent, FormEvent, useEffect } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
 
 interface HotelInput {
@@ -13,107 +13,26 @@ interface HotelInput {
 }
 
 const hotelInputs: HotelInput[] = [
-  {
-    id: "name",
-    label: "Name",
-    type: "text",
-    placeholder: "My Hotel",
-  },
-  {
-    id: "type",
-    label: "Type",
-    type: "text",
-    placeholder: "hotel",
-  },
-  {
-    id: "city",
-    label: "City",
-    type: "text",
-    placeholder: "New York",
-  },
-  {
-    id: "address",
-    label: "Address",
-    type: "text",
-    placeholder: "elton st, 216",
-  },
-  {
-    id: "distance",
-    label: "Distance from City Center",
-    type: "text",
-    placeholder: "500",
-  },
-  {
-    id: "title",
-    label: "Title",
-    type: "text",
-    placeholder: "The best Hotel",
-  },
-  {
-    id: "desc",
-    label: "Description",
-    type: "text",
-    placeholder: "description",
-  },
-  {
-    id: "cheapestPrice",
-    label: "Price",
-    type: "text",
-    placeholder: "100",
-  },
+  { id: "hotel_name", label: "Name", type: "text", placeholder: "My Hotel" },
+  { id: "city", label: "City", type: "text", placeholder: "City" },
+  { id: "country", label: "Country", type: "text", placeholder: "Country" },
+  { id: "distance", label: "Distance from", type: "text", placeholder: "2 km to city center" },
+  { id: "email", label: "email", type: "text", placeholder: "example@gmail.com" },
+  { id: "hotel_desc", label: "Description", type: "text", placeholder: "description" },
+  { id: "features", label: "Features", type: "text", placeholder: "Features of hotel" },
 ];
-
-const useFetch = (url: string) => {
-  const [data, setData] = useState<any[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const res = await axios.get(url);
-        setData(res.data);
-      } catch (err) {
-        setError(true);
-      }
-      setLoading(false);
-    };
-    fetchData();
-  }, [url]);
-
-  const reFetch = async () => {
-    setLoading(true);
-    try {
-      const res = await axios.get(url);
-      setData(res.data);
-    } catch (err) {
-      setError(true);
-    }
-    setLoading(false);
-  };
-
-  return { data, loading, error, reFetch };
-};
 
 const NewHotel: React.FC = () => {
   const [files, setFiles] = useState<FileList | null>(null);
   const [info, setInfo] = useState<Record<string, any>>({});
-  const [rooms, setRooms] = useState<string[]>([]);
-
-  const { data, loading } = useFetch("/rooms");
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setInfo((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
-  const handleSelect = (e: ChangeEvent<HTMLSelectElement>) => {
-    const value = Array.from(e.target.selectedOptions, (option) => option.value);
-    setRooms(value);
-  };
-
   const handleClick = async (e: FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
+    const token = localStorage.getItem("token");
     try {
       const list = await Promise.all(
         files
@@ -134,13 +53,21 @@ const NewHotel: React.FC = () => {
 
       const newHotel = {
         ...info,
-        rooms,
         photos: list,
       };
 
-      await axios.post("/hotels", newHotel);
+      console.log("New Hotel Data:", newHotel);
+
+      await axios.post("https://phbackend-9rp2.onrender.com/hotels", newHotel, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      alert("Hotel successfully created");
     } catch (err) {
       console.log(err);
+      alert("An error occurred while creating the hotel");
     }
   };
 
@@ -185,20 +112,13 @@ const NewHotel: React.FC = () => {
                 </div>
               ))}
               <div className="formInput">
-                <label>Feautured</label>
+                <label>Featured</label>
                 <select id="featured" onChange={handleChange}>
-                  <option value={'false'}>Yes</option>
-                  <option value={'true'}>No</option>
+                  <option value={'false'}>No</option>
+                  <option value={'true'}>Yes</option>
                 </select>
               </div>
-              <div className="selectRooms">
-                <label>Rooms: </label>
-                <select className="sel-room" id="rooms" multiple onChange={handleSelect}>
-                  {loading ? "loading" : data && data.map((room) => (
-                    <option key={room._id} value={room._id}>{room.title}</option>
-                  ))}
-                </select>
-              </div>
+
               <button onClick={handleClick}>Send</button>
             </form>
           </div>

@@ -26,24 +26,7 @@ const useFetch = (url: string | null) => {
     fetchData();
   }, [url]);
 
-  const reFetch = async () => {
-    if (!url) return;
-    setLoading(true);
-    try {
-      const token = localStorage.getItem("token");
-      const res = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-      setData(res.data);
-    } catch (err) {
-      setError(true);
-    }
-    setLoading(false);
-  };
-
-  return { data, loading, error, reFetch };
+  return { data, loading, error };
 };
 
 export default useFetch;
