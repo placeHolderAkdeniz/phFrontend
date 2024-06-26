@@ -25,11 +25,11 @@ const Navbar: React.FC = () => {
 
   const hotels: Hotel[] = myHotelData as Hotel[] || [];
 
-  useEffect(() => {
-    if (hotels.length > 0) {
-      localStorage.setItem('myHotel', JSON.stringify(hotels));
-    }
-  }, [myHotelData]);
+  // useEffect(() => {
+  //   if (hotels.length > 0) {
+  //     localStorage.setItem('myHotel', JSON.stringify(hotels));
+  //   }
+  // }, [myHotelData]);
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 

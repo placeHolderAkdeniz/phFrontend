@@ -73,7 +73,7 @@ export default function HotelPage() {
         }
 
         const data = response.data;
-
+        
         if (Array.isArray(data) && data.length > 0) {
           const fetchedHotel: Hotel = {
             _id: data[0]._id,
@@ -88,6 +88,7 @@ export default function HotelPage() {
             country: data[0].country,
           };
           setHotel(fetchedHotel);
+          
         }
       } catch (error) {
         console.error('Error fetching hotel:', error);
@@ -116,7 +117,7 @@ export default function HotelPage() {
     <div className={styles.container}>
       {hasToken ? <STopBar /> : <TopBar />} 
       <div className={styles.content}>
-        <Box sx={{ width: '100%' }}>
+        <Box sx={{ width: '100%'}}>
           <Tabs value={value} onChange={handleChange} aria-label="hotel tabs">
             <Tab label="Preview" icon={<PreviewIcon />} {...a11yProps(0)} />
             <Tab label="Comments" icon={<CommentIcon />} {...a11yProps(1)} />

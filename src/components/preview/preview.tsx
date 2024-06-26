@@ -4,7 +4,6 @@ import { Hotel } from '../hotel-card/hotel-card';
 import {
   Box,
   Card,
-  CardMedia,
   CardContent,
   Typography,
   TextField,
@@ -12,8 +11,20 @@ import {
   CircularProgress,
   Grid,
   Paper,
+  Divider,
+  CardMedia,
 } from '@mui/material';
+import Slider from 'react-slick';
+import axios from 'axios';
+import StarIcon from '@mui/icons-material/Star';
+import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
+
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import styles from './preview.module.scss';
+import useFetch from '@/hooks/useFetch';
+import { SearchBar } from '../search-bar/search-bar';
+import { useNavigate } from 'react-router-dom';
 
 interface PreviewProps {
   hotel: Hotel;
@@ -22,129 +33,121 @@ interface PreviewProps {
 const Preview: React.FC<PreviewProps> = ({ hotel }) => {
   const [checkInDate, setCheckInDate] = useState<string>('');
   const [checkOutDate, setCheckOutDate] = useState<string>('');
-  const [personCount, setPersonCount] = useState<number>(1);
-  const [price, setPrice] = useState<number>(0);
+  const navigate = useNavigate();
   const [message, setMessage] = useState<string>('');
   const [loading, setLoading] = useState<boolean>(false);
 
+  const renderStars = (count: number) => {
+    return (
+      <>
+        {[...Array(count)].map((_, index) => (
+          <StarIcon key={index} style={{ color: '#FFD700' }} />
+        ))}
+      </>
+    );
+  };
+
   const handleReservation = async () => {
+    const token = localStorage.getItem('token');
+    const hotel = localStorage.getItem('hotelId');
+    const roomId =localStorage.getItem('roomId');
+
+    if (!token) {
+      setMessage('Please login to make a reservation.');
+      return;
+    }
+
     setLoading(true);
     setMessage('');
+
+    const requestBody = {
+      hotel,
+      roomId,
+      checkInDate,
+      checkOutDate,
+    };
     try {
-      const token = localStorage.getItem('token');
-      const hotelId = localStorage.getItem('hotelId');
-      const response = await fetch('https://phbackend-9rp2.onrender.com/bookings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          hotelId,
-          checkInDate,
-          checkOutDate,
-          personCount,
-          price,
-        }),
-      });
-      console.log(token);
+      const response = await axios.post(
+        'https://phbackend-9rp2.onrender.com/bookings',
+        requestBody,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
-      const result = await response.json();
-
-      if (response.ok) {
+      if (response.status === 200) {
         setMessage('Reservation created successfully.');
       } else {
-        setMessage(result.message || 'Please Login for making reservation.');
+        setMessage('Reservation failed. Please try again.');
       }
-    } catch (error) {
+    } catch (err) {
+      console.error('Error during reservation:', err);
       setMessage('An error occurred. Please try again later.');
     } finally {
       setLoading(false);
     }
   };
+  const handleSearch = (criteria: { city: string; checkInDate: string; checkOutDate: string; adult: number; child: number }) => {
+    // Arama kriterlerini URL parametrelerine ekleyerek Filtration sayfasına yönlendiriyoruz
+    navigate(`/filtration?city=${encodeURIComponent(criteria.city)}&checkInDate=${criteria.checkInDate}&checkOutDate=${criteria.checkOutDate}&adult=${criteria.adult}&child=${criteria.child}`);
+  };
+  // Slick slider ayarları
+  const settings = {
+    dots: true,
+    infinite: true,
+    speed: 500,
+    autoplay:true,
+    autoplaySpeed:4000,
+    slidesToShow: 1,
+    slidesToScroll: 1,
+  };
 
   return (
     <Box className={styles.container} sx={{ p: 3 }}>
-      <Paper elevation={3}>
-        <Card>
-          <CardMedia
-            component="img"
-            height="300"
-            image={hotel.image[0]}
-            alt={`${hotel.name} image`}
-          />
-          <CardContent>
-            <Typography variant="h5" component="div">
-              Hotel Name: {hotel.name}
+        <Card sx={{borderRadius:"15px"}}>
+          <Slider {...settings}>
+            {hotel.image.map((imgSrc, index) => (
+              <CardMedia
+                key={index}
+                component="img"
+                height="500"
+                image={imgSrc}
+                alt={`${hotel.name} image ${index + 1}`}
+              />
+            ))}
+          </Slider>
+          <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: '5px', height:"fit-content"}}>
+            <Typography variant="h5" component="div" sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+              {hotel.name} <div style={{ display: 'flex', alignItems: 'center' }}><LocationOnOutlinedIcon /> {hotel.city} / {hotel.country}</div>
             </Typography>
             <Typography variant="subtitle1" color="textSecondary">
-              Location: {hotel.city} / {hotel.country}
+              {hotel.description}
             </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Description: {hotel.description}
+            <Divider textAlign="left"></Divider>
+            <Typography variant="body2" color="textSecondary" sx={{ display: 'flex', alignItems: 'center' }}>
+              Average Stars: {renderStars(Math.round(hotel.average_stars))}
             </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Average Stars: {hotel.average_stars}
+            <Typography variant="body2" color="textSecondary" sx={{ display: 'flex', alignItems: 'center' }}>
+              Hygiene: {renderStars(Math.round(hotel.hygiene_star))}
             </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Hygiene: {hotel.hygiene_star}
+            <Typography variant="body2" color="textSecondary" sx={{ display: 'flex', alignItems: 'center' }}>
+              Safety: {renderStars(Math.round(hotel.safety_star))}
             </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Safety: {hotel.safety_star}
-            </Typography>
-            <Typography variant="body2" color="textSecondary">
-              Transportation: {hotel.transportation_star}
+            <Typography variant="body2" color="textSecondary" sx={{ display: 'flex', alignItems: 'center' }}>
+              Transportation: {renderStars(Math.round(hotel.transportation_star))}
             </Typography>
           </CardContent>
         </Card>
-      </Paper>
-      <Box mt={3}>
-        <Paper elevation={3} sx={{ p: 3 }}>
+      
+
+      <Box mt={3} sx={{width:"100%"}}>
           <Typography variant="h6" component="div" gutterBottom>
-            Make a Reservation
+            Search a Reservation
           </Typography>
-          <Grid container spacing={2}>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                type="date"
-                label="Check-In Date"
-                InputLabelProps={{ shrink: true }}
-                value={checkInDate}
-                onChange={(e) => setCheckInDate(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                type="date"
-                label="Check-Out Date"
-                InputLabelProps={{ shrink: true }}
-                value={checkOutDate}
-                onChange={(e) => setCheckOutDate(e.target.value)}
-              />
-            </Grid>
-            <Grid item xs={12} sm={6}>
-              <TextField
-                fullWidth
-                type="number"
-                label="Person Count"
-                value={personCount}
-                onChange={(e) => setPersonCount(Number(e.target.value))}
-              />
-            </Grid>
-            
-            <Grid item xs={12}>
-              <Button
-                fullWidth
-                variant="contained"
-                color="primary"
-                onClick={handleReservation}
-                disabled={loading}
-              >
-                {loading ? <CircularProgress size={24} /> : 'Reserve'}
-              </Button>
-            </Grid>
+          <SearchBar onSearch={handleSearch} />
             {message && (
               <Grid item xs={12}>
                 <Typography variant="body2" color="error">
@@ -152,8 +155,6 @@ const Preview: React.FC<PreviewProps> = ({ hotel }) => {
                 </Typography>
               </Grid>
             )}
-          </Grid>
-        </Paper>
       </Box>
     </Box>
   );

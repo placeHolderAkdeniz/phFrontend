@@ -3,6 +3,7 @@ import Sidebar from "../../../components/admin-components/sidebar/sidebar";
 import Navbar from "../../../components/admin-components/navbar/navbar";
 import { useState, useEffect, ChangeEvent, FormEvent } from "react";
 import axios from "axios";
+import useFetch from "@/hooks/useFetch";
 import {
   Tab,
   Tabs,
@@ -18,7 +19,6 @@ import {
   SelectChangeEvent,
 } from "@mui/material";
 
-// Otel bilgileri arayüzü
 interface Hotel {
   _id: string;
   hotel_name: string;
@@ -31,7 +31,6 @@ interface Hotel {
   featured: boolean;
 }
 
-// Modal stilleri
 const modalStyle = {
   position: "absolute" as "absolute",
   top: "50%",
@@ -40,24 +39,32 @@ const modalStyle = {
   width: 400,
   bgcolor: "background.paper",
   border: "2px solid #000",
+  borderRadius: "10px",
   boxShadow: 24,
   p: 4,
+  display: "flex",
+  flexDirection: "column",
+  gap: "20px"
 };
 
 const UpdateHotel: React.FC = () => {
-  const [hotels, setHotels] = useState<Hotel[]>([]);
+  const { data: myHotelData } = useFetch("https://phbackend-9rp2.onrender.com/users/my-hotel");
+  const hotels: Hotel[] = myHotelData || [];
   const [selectedHotel, setSelectedHotel] = useState<Hotel | null>(null);
   const [info, setInfo] = useState<Record<string, any>>({});
   const [open, setOpen] = useState(false);
+  const [tabValue, setTabValue] = useState<string | false>(false);
 
   useEffect(() => {
-    const storedHotels = localStorage.getItem("hotels");
-    if (storedHotels) {
-      setHotels(JSON.parse(storedHotels));
+    if (hotels.length > 0) {
+      setTabValue(hotels[0]._id);
+      setSelectedHotel(hotels[0]);
+      setInfo(hotels[0]);
     }
-  }, []);
+  }, [myHotelData]);
 
   const handleTabChange = (event: React.SyntheticEvent, newValue: string) => {
+    setTabValue(newValue);
     const hotel = hotels.find((hotel) => hotel._id === newValue);
     if (hotel) {
       setSelectedHotel(hotel);
@@ -65,11 +72,13 @@ const UpdateHotel: React.FC = () => {
     }
   };
 
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    console.log("Input change event:", e);
     setInfo((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
   const handleSelectChange = (event: SelectChangeEvent<"true" | "false">) => {
+    console.log("Select change event:", event);
     setInfo((prev) => ({ ...prev, featured: event.target.value === "true" }));
   };
 
@@ -85,11 +94,18 @@ const UpdateHotel: React.FC = () => {
 
     try {
       const updatedHotel = {
-        ...info,
+        ...Object.keys(info).reduce((acc, key) => {
+          if (info[key] !== selectedHotel[key as keyof Hotel]) {
+            acc[key] = info[key];
+          }
+          return acc;
+        }, {} as Record<string, any>),
         hotelId: selectedHotel._id,
       };
 
-      await axios.put("https://phbackend-9rp2.onrender.com/hotels", updatedHotel, {
+      console.log("Updating hotel with data:", updatedHotel);
+
+      await axios.patch("https://phbackend-9rp2.onrender.com/hotels", updatedHotel, {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
@@ -98,7 +114,7 @@ const UpdateHotel: React.FC = () => {
 
       alert("Hotel successfully updated");
     } catch (err) {
-      console.log(err);
+      console.log("Error updating hotel:", err);
       alert("An error occurred while updating the hotel");
     }
   };
@@ -113,7 +129,7 @@ const UpdateHotel: React.FC = () => {
         </div>
         <div className="bottom">
           <Box sx={{ width: '100%' }}>
-            <Tabs onChange={handleTabChange} aria-label="hotel tabs">
+            <Tabs value={tabValue} onChange={handleTabChange} aria-label="hotel tabs">
               {hotels.map((hotel) => (
                 <Tab label={hotel.hotel_name} value={hotel._id} key={hotel._id} />
               ))}
@@ -125,6 +141,7 @@ const UpdateHotel: React.FC = () => {
                   <TextField
                     label="Hotel Name"
                     id="hotel_name"
+                    placeholder={selectedHotel.hotel_name}
                     value={info.hotel_name || ""}
                     onChange={handleInputChange}
                     fullWidth
@@ -133,6 +150,7 @@ const UpdateHotel: React.FC = () => {
                   <TextField
                     label="City"
                     id="city"
+                    placeholder={selectedHotel.city}
                     value={info.city || ""}
                     onChange={handleInputChange}
                     fullWidth
@@ -141,6 +159,7 @@ const UpdateHotel: React.FC = () => {
                   <TextField
                     label="Country"
                     id="country"
+                    placeholder={selectedHotel.country}
                     value={info.country || ""}
                     onChange={handleInputChange}
                     fullWidth
@@ -149,6 +168,7 @@ const UpdateHotel: React.FC = () => {
                   <TextField
                     label="Email"
                     id="email"
+                    placeholder={selectedHotel.email}
                     value={info.email || ""}
                     onChange={handleInputChange}
                     fullWidth
@@ -157,14 +177,16 @@ const UpdateHotel: React.FC = () => {
                   <TextField
                     label="Description"
                     id="hotel_desc"
+                    placeholder={selectedHotel.hotel_desc}
                     value={info.hotel_desc || ""}
                     onChange={handleInputChange}
                     fullWidth
                     margin="normal"
                   />
                   <TextField
-                    label="Distance from City Center"
+                    label="Distance from"
                     id="distance"
+                    placeholder={selectedHotel.distance}
                     value={info.distance || ""}
                     onChange={handleInputChange}
                     fullWidth
@@ -173,6 +195,7 @@ const UpdateHotel: React.FC = () => {
                   <TextField
                     label="Features"
                     id="features"
+                    placeholder={selectedHotel.features.join(", ")}
                     value={info.features || ""}
                     onChange={handleInputChange}
                     fullWidth
@@ -190,9 +213,9 @@ const UpdateHotel: React.FC = () => {
                       <MenuItem value={"true"}>Yes</MenuItem>
                     </Select>
                   </FormControl>
-                  <Button variant="contained" color="primary" onClick={handleSubmit}>
+                  <button onClick={handleSubmit}> 
                     Update Hotel
-                  </Button>
+                  </button>
                 </form>
               </Box>
             )}
@@ -209,12 +232,14 @@ const UpdateHotel: React.FC = () => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             Are you sure you want to update this hotel?
           </Typography>
-          <Button variant="contained" color="primary" onClick={handleConfirm}>
-            Confirm
-          </Button>
-          <Button variant="contained" color="secondary" onClick={() => setOpen(false)}>
-            Cancel
-          </Button>
+          <div style={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+            <Button variant="contained" color="primary" onClick={handleConfirm}>
+              Confirm
+            </Button>
+            <Button variant="contained" color="error" onClick={() => setOpen(false)}>
+              Cancel
+            </Button>
+          </div>
         </Box>
       </Modal>
     </div>
