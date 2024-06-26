@@ -1,9 +1,9 @@
-// new-room.tsx
 import "./new-room.scss";
 import Sidebar from "../../../components/admin-components/sidebar/sidebar";
 import Navbar from "../../../components/admin-components/navbar/navbar";
 import { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import axios from "axios";
+import useFetch from "@/hooks/useFetch";
 
 // Room input fields
 interface RoomInput {
@@ -42,14 +42,9 @@ const NewRoom: React.FC = () => {
   const [info, setInfo] = useState<Record<string, any>>({});
   const [hotel, setHotelId] = useState<string | undefined>(undefined);
 
-  // Fetch hotel data from local storage
-  const [myHotelData, setMyHotelData] = useState<any[]>([]);
-  useEffect(() => {
-    const storedHotelData = localStorage.getItem('myHotel');
-    if (storedHotelData) {
-      setMyHotelData(JSON.parse(storedHotelData));
-    }
-  }, []);
+  // Fetch hotel data from API
+  const { data: myHotelData } = useFetch("https://phbackend-9rp2.onrender.com/users/my-hotel");
+  const hotels = myHotelData as { _id: string; hotel_name: string }[] || [];
 
   // Handle input change for room details
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -135,8 +130,8 @@ const NewRoom: React.FC = () => {
                   value={hotel || ""} // State boşsa boş string kullanılıyor
                   onChange={handleHotelChange} // Hotel değişikliği yönetiliyor
                 >
-                  {myHotelData.length > 0 ? (
-                    myHotelData.map((hotel) => (
+                  {hotels.length > 0 ? (
+                    hotels.map((hotel) => (
                       <option key={hotel._id} value={hotel._id}>
                         {hotel.hotel_name} ({hotel._id})
                       </option>

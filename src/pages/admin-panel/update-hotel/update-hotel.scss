@@ -12,6 +12,17 @@
         padding: 10px;
         margin: 20px;
         display: flex;
+
+        button {
+          width: 150px;
+          padding: 10px;
+          border: none;
+          background-color: #3acbe1;
+          color: white;
+          font-weight: bold;
+          cursor: pointer;
+          margin-top: 10px;
+        }
   
         h1 {
           color: lightgray;
@@ -29,16 +40,7 @@
           flex: 2;
   
           
-          button {
-            width: 150px;
-            padding: 10px;
-            border: none;
-            background-color: #3acbe1;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            margin-top: 10px;
-          }
+          
         }
       }
     }

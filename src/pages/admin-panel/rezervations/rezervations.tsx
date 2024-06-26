@@ -3,6 +3,7 @@ import Sidebar from "../../../components/admin-components/sidebar/sidebar";
 import Navbar from "../../../components/admin-components/navbar/navbar";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import useFetch from "@/hooks/useFetch";
 import {
   Tabs,
   Tab,
@@ -37,18 +38,14 @@ interface Reservation {
 }
 
 const Rezervations: React.FC = () => {
-  const [hotels, setHotels] = useState<Hotel[]>([]);
+  const { data: myHotelData } = useFetch("https://phbackend-9rp2.onrender.com/users/my-hotel");
+  const hotels: Hotel[] = myHotelData as Hotel[] || [];
+
   const [activeTab, setActiveTab] = useState(0);
   const [reservations, setReservations] = useState<Reservation[]>([]);
   const [page, setPage] = useState(1);
   const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  useEffect(() => {
-    const storedHotels = localStorage.getItem("myHotel");
-    if (storedHotels) {
-      setHotels(JSON.parse(storedHotels));
-    }
-  }, []);
 
   useEffect(() => {
     if (hotels.length > 0) {
